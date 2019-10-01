@@ -15,5 +15,6 @@ class PassChecker
   end
 end
 
+# test operation
 p=PassChecker.new(50,60)
 p.result
