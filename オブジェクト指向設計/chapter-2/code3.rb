@@ -20,7 +20,7 @@ class PassChecker
   end
 
   def pass_possibility
-    if pass_standard && school.magnification<1.5
+    if pass_standard && school.competitive_ratio<1.5
       'high'
     else
       'low'
@@ -36,13 +36,13 @@ class School
     @pass_student = pass_student
   end
 
-  def magnification
+  def competitive_ratio
     whole_student / pass_student.to_f
   end
 end
 
 # test operation
 @school=School.new(230,100)
-puts @school.magnification
+puts @school.competitive_ratio
 
 puts PassChecker.new(100,50,@school).pass_possibility

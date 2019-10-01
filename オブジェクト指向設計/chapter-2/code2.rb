@@ -16,7 +16,7 @@ class PassChecker
     end
   end
 
-  def magnification
+  def competitive_ratio
     whole_student/pass_student.to_f
   end
 end
@@ -24,4 +24,4 @@ end
 # test operation
 p=PassChecker.new(50,60,230,100)
 puts p.result
-puts p.magnification
+puts p.competitive_ratio

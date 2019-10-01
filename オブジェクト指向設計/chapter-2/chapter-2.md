@@ -60,7 +60,7 @@ class PassChecker
     end
   end
 
-  def magnification
+  def competitive_ratio
     whole_student/pass_student.to_f
   end
 end
@@ -69,7 +69,7 @@ end
 ”単一責任の原則”に基づいてこのコードを評価してみよう。クラスが単一責任かどうかはそのクラスの持つメソッドを質問に言い換えた
 ときに意味のある質問になっているか、で判断できる。  
 「PassCheckerさん、あなたのresultは何ですか」これは分かる  
-しかし、「PassCheckerさん、あなたのmagnification(倍率)は何ですか」これはしっくりこない。  
+しかし、「PassCheckerさん、あなたのcompetitive_ratio(倍率)は何ですか」これはしっくりこない。  
 
 また、クラスが何をしているか判断するために、クラスを一文で説明する方法がある。説明に「それと」が含まれる場合は２つ以上の責任、
 「または」が含まれる場合は全く関係のない２つ以上の責任を持っている可能性が高い。
@@ -100,7 +100,7 @@ class PassChecker
   end
 
   School = Struct.new(:whole_student,pass_student) do
-    def magnification
+    def competitive_ratio
       whole_student / pass_student.to_f
     end
   end
@@ -167,7 +167,7 @@ class ObscuringExample
     @data=data
   end
 
-  def  magnification
+  def  competitive_ratio
     data.collect {|cell|
       cell[0] / cell[1].to_f
     }
@@ -181,7 +181,7 @@ end
 ~~~
 
 このメソッドを使うにはメッセージの送り手が何のデータが配列のどこにあるのかを把握していなければならない。  
-またmagnificationメソッドも配列のどこに何が入っているか、を把握していなければいけない。
+またcompetitive_ratioメソッドも配列のどこに何が入っているか、を把握していなければいけない。
 これを解決するには構造体を使い、複雑な構造を隠蔽する必要がある
 ~~~
 class RevealingExample
@@ -191,7 +191,7 @@ class RevealingExample
     @numbers=numify(data)
   end
 
-  def magnification
+  def competitive_ratio
     numbers.collect {|number|
       number.whole / number.pass
     }
@@ -205,15 +205,15 @@ class RevealingExample
   end
 end
 ~~~
-上記のmagnificationメソッドは配列の内部構造について何も知らず  
+上記のcompetitive_ratioメソッドは配列の内部構造について何も知らず  
 - numbersに列挙できる何かがある
 - それらの要素がwhole,passに応答する
 ことくらいしか知らない。  
 
 #### メソッドを単一責任にする
-magnificationメソッドを見ると
+competitive_ratioメソッドを見ると
 ~~~
-def magnification
+def competitive_ratio
   numbers.collect {|number|
     number.whole / number.pass
   }
@@ -222,10 +222,10 @@ end
 
 ２つの責任を持っていることは明白だ。これは
 ~~~
-def magnification
-  numbers.collect{|number| magnificate(number)}
+def competitive_ratio
+  numbers.collect{|number| calc_competitive_ratio(number)}
 end
-def magnificate(number)
+def calc_competitive_ratio(number)
   number.whole / number.pass
 end
 ~~~
@@ -289,7 +289,7 @@ class PassChecker
   end
 
   def pass_possibility
-    if pass_standard && school.magnification<1.5
+    if pass_standard && school.competitive_ratio<1.5
       'high'
     else
       'low'
@@ -305,7 +305,7 @@ class School
     @pass_student = pass_student
   end
 
-  def magnification
+  def competitive_ratio
     whole_student / pass_student.to_f
   end
 end
