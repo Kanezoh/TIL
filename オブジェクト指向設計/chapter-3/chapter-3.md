@@ -122,7 +122,7 @@ PassCheckerはこのオブジェクトを@school変数に保持し、schoolメ�
 #### 依存を隔離する  
 
 完璧に依存を取り除くのは不可能だから出来るだけ隔離しましょう！  
-もし制約がきつく、SchoolをPassCheckerに注入できない場合は
+もし制約がきつく、SchoolをPassCheckerに注入できない場合は  
 １、インスタンス生成をPassChecker内のinitializeに任せ、依存を明確にする
 ~~~
 class PassChecker
