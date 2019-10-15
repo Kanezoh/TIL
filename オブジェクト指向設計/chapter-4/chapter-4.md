@@ -40,11 +40,11 @@
 
 ここでは、設計の手法として**シーケンス図**を使用する。（UMLというオブジェクト指向のモデリング言語の一種）
 この図では客が店番にorderメッセージを送り、レスポンスを得る。
-![図１](https://github.com/Kanezoh/TIL/blob/master/images/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E8%A8%AD%E8%A8%88/image4-1.jpg)
+![図１](https://github.com/Kanezoh/TIL/blob/master/images/chapter-4/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E8%A8%AD%E8%A8%88/image4-1.jpg)
 
 さて、ここではStaffクラスが注文に関わる全ての処理を行なっている。店の取扱商品から要求されるitemの一覧を返し、さらにその数量が注文数に足るかも調べている。ここでの疑問は「Staffが在庫を調べる責任まで追うべきだろうか？」。客がsuitable_itemsを送るのは理にかなっている。  
 しかし、接客のためのスタッフが在庫を調べるのはどうか。とりあえず倉庫スタッフを作ってみる。
-![図２](https://github.com/Kanezoh/TIL/blob/master/images/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E8%A8%AD%E8%A8%88/image4-2.jpg)
+![図２](https://github.com/Kanezoh/TIL/blob/master/images/chapter-4/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E8%A8%AD%E8%A8%88/image4-2.jpg)
 
 図1ではCustomerは
 - アイテムの一覧が欲しい
@@ -64,7 +64,7 @@
 
 ここでは設計の問題はさておき、「どのように」でなく「何を」を基準にすることを考える。  
 例として、StaffがRepairmanに客に商品を出す前にしっかりと商品が整備されているかを確認することを想定する。
-![図３](https://github.com/Kanezoh/TIL/blob/master/images/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E8%A8%AD%E8%A8%88/image4-3.jpg)
+![図３](https://github.com/Kanezoh/TIL/blob/master/images/chapter-4/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E8%A8%AD%E8%A8%88/image4-3.jpg)
 
 この例では  
 - Staffのパブリックインターフェースはitemsを含む
@@ -72,7 +72,7 @@
 - Staffは上のメソッドらに応答できるオブジェクトを持ち続ける
 
 ことになっている。StaffはRepairmanが行うことについて詳細をいくつも知っている。つまり、整備の手順に新しいものが追加されたらStaffにも変更が及ぶ。代案を考えよう。  
-![図４](https://github.com/Kanezoh/TIL/blob/master/images/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E8%A8%AD%E8%A8%88/image4-4.jpg)
+![図４](https://github.com/Kanezoh/TIL/blob/master/images/chapter-4/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E8%A8%AD%E8%A8%88/image4-4.jpg)
 
 この例では  
 - Staffのパブリックインターフェースはitemsを含む
@@ -86,7 +86,7 @@
 
 Staffが他のオブジェクトについて知っていることによってStaffの**コンテキスト**が形成される。単純なコンテキストを持つオブジェクトは、再利用が容易で、他のオブジェクトに多くを求めない。また、多くのオブジェクトと共同作業が可能。  
 Staffが求めるのは「準備されていること」。それにアイテムが必要だということを判断することはRepairmanの責任
-![図５](https://github.com/Kanezoh/TIL/blob/master/images/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E8%A8%AD%E8%A8%88/image4-5.jpg)
+![図５](https://github.com/Kanezoh/TIL/blob/master/images/chapter-4/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E8%A8%AD%E8%A8%88/image4-5.jpg)
 
 ここでは  
 - Staffのパブリックインターフェースはitemsを含む
