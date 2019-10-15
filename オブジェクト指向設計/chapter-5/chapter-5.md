@@ -24,7 +24,7 @@ class Repairman
 end
 ~~~
 対応するシーケンス図はこちら
-![図1]()
+![図1](https://github.com/Kanezoh/TIL/blob/master/images/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E8%A8%AD%E8%A8%88/chapter-5/5-1.png)
 
 prepareメソッドはRepairmanに明確な依存はしていないが、prepare_itemsに応答するオブジェクトを受け取ることには依存している。
 次に、要件が変わって準備に関わるクラスが増加したことを想定してみる。CheckmanとPackingmanを追加する。
@@ -66,7 +66,7 @@ end
 #### ダックを見つける
 
 依存を取り除くためには「Staffのprepareメソッドは単一の目的を果たすためにあるので、その引数も同じ目的を共に達成するために送られてくる」と言うことである。prepareの目的はスタッフが客に渡すアイテムの準備をすること、にある。つまり、メッセージを送る先はpreparer(準備する人)と抽象化できる。個々のオブジェクトではなく、prepare_itemsに対応する複数のpreparerを想定すると、より柔軟な設計となる。
-図２
+![図２](https://github.com/Kanezoh/TIL/blob/master/images/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E8%A8%AD%E8%A8%88/chapter-5/5-2.png)
 Preparerは具象ではなく、抽象的なインターフェースであり、prepare_itemsを実装するPreparerである。つまり、Repairman、そして先の例で追加したCheckman,PackingmanがPreparerになれば良い。
 
 ~~~
