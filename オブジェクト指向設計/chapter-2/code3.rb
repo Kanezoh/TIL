@@ -29,15 +29,15 @@ class PassChecker
 end
 
 class School
-  attr_reader :whole_student,:pass_student
+  attr_reader :whole_students,:pass_students
 
-  def initialize(whole_student,pass_student)
-    @whole_student = whole_student
-    @pass_student = pass_student
+  def initialize(whole_students,pass_students)
+    @whole_students = whole_students
+    @pass_students = pass_students
   end
 
   def competitive_ratio
-    whole_student / pass_student.to_f
+    whole_students / pass_students.to_f
   end
 end
 

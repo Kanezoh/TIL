@@ -1,11 +1,11 @@
 class PassChecker
-  attr_reader :math,:science,:whole_student,:pass_student
+  attr_reader :math,:science,:whole_students,:pass_students
 
-  def initialize(math,science,whole_student,pass_student)
+  def initialize(math,science,whole_students,pass_students)
     @math=math
     @science=science
-    @whole_student=whole_student
-    @pass_student=pass_student
+    @whole_students=whole_students
+    @pass_students=pass_students
   end
 
   def result
@@ -17,7 +17,7 @@ class PassChecker
   end
 
   def competitive_ratio
-    whole_student/pass_student.to_f
+    whole_students/pass_students.to_f
   end
 end
 
