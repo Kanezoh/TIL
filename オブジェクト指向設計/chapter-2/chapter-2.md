@@ -43,13 +43,13 @@ end
 とりあえずそのまま拡張してみよう
 ~~~
 class PassChecker
-  attr_reader :math,:science,:whole_student,:pass_student
+  attr_reader :math,:science,:whole_students,:pass_students
 
-  def initialize(math,science,whole_student,pass_student)
+  def initialize(math,science,whole_students,pass_students)
     @math=math
     @science=science
-    @whole_student=whole_student
-    @pass_student=pass_student
+    @whole_students=whole_students
+    @pass_students=pass_students
   end
 
   def result
@@ -61,7 +61,7 @@ class PassChecker
   end
 
   def competitive_ratio
-    whole_student/pass_student.to_f
+    whole_students/pass_students.to_f
   end
 end
 ~~~
@@ -85,10 +85,10 @@ PassCheckerクラスの責任は何だろう。「受験に関する情報を提
 class PassChecker
   attr_reader :math,:science,:school
 
-  def initialize(math,science,whole_student,pass_student)
+  def initialize(math,science,whole_students,pass_students)
     @math=math
     @science=science
-    @school=School.new(whole_student,pass_student)
+    @school=School.new(whole_students,pass_students)
   end
 
   def result
@@ -99,9 +99,9 @@ class PassChecker
     end
   end
 
-  School = Struct.new(:whole_student,pass_student) do
+  School = Struct.new(:whole_students,pass_students) do
     def competitive_ratio
-      whole_student / pass_student.to_f
+      whole_students / pass_students.to_f
     end
   end
 end
@@ -188,7 +188,7 @@ class RevealingExample
   attr_reader :numbers
 
   def initialize(data)
-    @numbers=numify(data)
+    @numbers=simplify(data)
   end
 
   def competitive_ratio
@@ -198,7 +198,7 @@ class RevealingExample
   end
 
   Score=Struct.new(:whole,:pass)
-  def numify(data)
+  def simplify(data)
     data.collect{|cell|
       Score.new(cell[0],cell[1])
     }
@@ -298,15 +298,15 @@ class PassChecker
 end
 
 class School
-  attr_reader :whole_student,:pass_student
+  attr_reader :whole_students,:pass_students
 
-  def initialize(whole_student,pass_student)
-    @whole_student = whole_student
-    @pass_student = pass_student
+  def initialize(whole_students,pass_students)
+    @whole_students = whole_students
+    @pass_students = pass_students
   end
 
   def competitive_ratio
-    whole_student / pass_student.to_f
+    whole_students / pass_students.to_f
   end
 end
 ~~~
