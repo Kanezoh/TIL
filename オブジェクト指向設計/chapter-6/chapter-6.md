@@ -239,6 +239,7 @@ def info
     cup_color: cup_color
   }
 end
+~~~
 flavourとpriceは変数に入れられ、IceCreamクラスに昇格している。  
 CornIceCreamでの実装はこれ
 ~~~
