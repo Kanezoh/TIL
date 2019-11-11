@@ -63,3 +63,77 @@ corn_ice=CornIceCream.new(
 )
 
 puts corn_ice.info
+
+#最終的な構成
+class IceCream
+  attr_reader :size,:price,:flavour
+
+  def initialize(args={})
+    @size=args[:size] || default_size
+    @price=args[:price]
+    @flavour=args[:flavour] || default_flavour
+
+    post_initialize(args)
+  end
+
+  def post_initialize
+    nil
+  end
+
+  def info
+    {
+      flavour: 'vanilla',
+      price: 100
+    }.merge(local_options)
+   end
+
+   def local_options
+      {}
+   end
+
+   def default_flavour
+     'vanilla'
+   end
+
+
+end
+
+class CupIceCream < IceCream
+  attr_reader :cup_color
+
+  def post_initialize(args)
+    @cup_color=args[:cup_color]
+  end
+
+  def info
+    super.merge({cup_color: cup_color})
+  end
+
+  def local_options
+    {cup_color: cup_color}
+  end
+
+  def default_size
+    'M'
+  end
+end
+
+class CornIceCream < IceCream
+  attr_reader :corn_flavour
+
+  def post_initialize(args)
+    @corn_flavour=args[:corn_flavour]
+  end
+
+  def info
+    super.merge({corn_flavour: corn_flavour})
+  end
+
+  def local_options
+    {corn_flavour: corn_flavour}
+  end
+
+  def default_size
+    'S'
+  end
+end
