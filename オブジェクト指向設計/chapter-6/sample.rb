@@ -105,10 +105,6 @@ class CupIceCream < IceCream
     @cup_color=args[:cup_color]
   end
 
-  def info
-    super.merge({cup_color: cup_color})
-  end
-
   def local_options
     {cup_color: cup_color}
   end
@@ -123,10 +119,6 @@ class CornIceCream < IceCream
 
   def post_initialize(args)
     @corn_flavour=args[:corn_flavour]
-  end
-
-  def info
-    super.merge({corn_flavour: corn_flavour})
   end
 
   def local_options
