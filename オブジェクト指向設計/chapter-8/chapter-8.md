@@ -10,7 +10,7 @@ IceCreamクラスをコンポジションを使うように変更するために
 IceCreamクラスにはinfoに答える責任がある。このinfoメソッドはアイスのオプションの一覧を返す。  
 つまり、IceCreamクラスがOptionsクラスを持つことは自然に思える。
 
-8-1.png  
+![図8-1](https://github.com/Kanezoh/TIL/blob/master/images/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E8%A8%AD%E8%A8%88/chapter-8/8-1.png)
 ~~~
 class IceCream
   attr_reader :size,:options
@@ -106,7 +106,7 @@ end
 Optionsは個々のオプションについて扱うので、個々のオプションそれぞれについてもクラスを作ることができる。  
 OptionsはOptionをたくさん持つことができる、と考える。  
 #### Optionを作る
-8-2.png
+![図8-2](https://github.com/Kanezoh/TIL/blob/master/images/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E8%A8%AD%E8%A8%88/chapter-8/8-2.png)
 
 こうしてOptionクラスを新たに導入したことで、Optionsクラスは個々のOptionの配列を包むラッパーとなった。
 ~~~
