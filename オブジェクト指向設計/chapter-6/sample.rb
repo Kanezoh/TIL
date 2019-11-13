@@ -69,8 +69,8 @@ class IceCream
   attr_reader :size,:price,:flavour
 
   def initialize(args={})
-    @size=args[:size] || default_size
-    @price=args[:price]
+    @size=args[:size]
+    @price=args[:price] || default_price
     @flavour=args[:flavour] || default_flavour
 
     post_initialize(args)
@@ -95,6 +95,9 @@ class IceCream
      'vanilla'
    end
 
+   def default_price
+     raise NotImplemetedError
+   end
 
 end
 
@@ -109,8 +112,8 @@ class CupIceCream < IceCream
     {cup_color: cup_color}
   end
 
-  def default_size
-    'M'
+  def default_price
+    100
   end
 end
 
@@ -125,7 +128,7 @@ class CornIceCream < IceCream
     {corn_flavour: corn_flavour}
   end
 
-  def default_size
-    'S'
+  def default_price
+    150
   end
 end

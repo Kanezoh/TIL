@@ -167,7 +167,7 @@ CupIceCreamのinfoメソッドは
 とりあえず、１つ目の問題は置いておき、２つ目について考えてみる。要件は  
 - アイスは値段と味を持つ
 - 全てのアイスは味について同じ初期値を共有する
-- サブクラスはサイズについて独自の初期値を持つ
+- サブクラスは値段について独自の初期値を持つ
 - サブクラスの個々のインスタンスは初期値を無視し、インスタンス固有の値を持つことが許される  
 これを満たすスーパークラスは
 ~~~
@@ -184,14 +184,14 @@ end
 要件の最初と最後は満たしたと言える。
 #### テンプレートメソッドパターン
 
-default_sizeとdefault_flavourを定義して初期値を表現する。初期値をメソッドでラップすることの利点は、サブクラスがメソッドをオーバーライドすることによって何かに特化できる機会を与えることだ。これをテンプレートメソッドという。
+default_priceとdefault_flavourを定義して初期値を表現する。初期値をメソッドでラップすることの利点は、サブクラスがメソッドをオーバーライドすることによって何かに特化できる機会を与えることだ。これをテンプレートメソッドという。
 ~~~
 class IceCream
   attr_reader :size,:price,:flavour
 
   def initialize(args={})
-    @size=args[:size] || default_size
-    @price=args[:price]
+    @size=args[:size]
+    @price=args[:price]|| default_price
     @flavour=args[:flavour] || default_flavour
   end
 
@@ -201,16 +201,16 @@ class IceCream
 end
 
 class CupIceCream < IceCream
-  def default_size
-    'M'
+  def default_price
+    100
   end
 end
 ~~~
 ### テンプレートメソッドの罠
-しかし、ここで終わってはいけない。現在、IceCreamクラスはサブクラスにdefault_sizeを実装していることを暗に要求している。コードを一見するだけで把握できない要件を課すことはとんでもない。よって、抽象クラスにもきっちりテンプレートメソッドを実装しよう、こんな具合に。
+しかし、ここで終わってはいけない。現在、IceCreamクラスはサブクラスにdefault_priceを実装していることを暗に要求している。コードを一見するだけで把握できない要件を課すことはとんでもない。よって、抽象クラスにもきっちりテンプレートメソッドを実装しよう、こんな具合に。
 ~~~
 class IceCream
-  def default_size
+  def default_price
     raise NotImplemetedError
       "This #{self.class} cannot respond to"
   end
@@ -223,7 +223,7 @@ roll_ice=RollIceCream.new
 
 => NotImplementedError:
   This RollIceCream cannot respond to:
-      'default_size'
+      'default_price'
 ~~~
 
 ### 6-5 スーパークラスとサブクラスの結合度の管理
@@ -265,8 +265,8 @@ class IceCream
   attr_reader :size,:price,:flavour
 
   def initialize(args={})
-    @size=args[:size] || default_size
-    @price=args[:price]
+    @size=args[:size]
+    @price=args[:price]|| default_price
     @flavour=args[:flavour] || default_flavour
   end
 
@@ -294,8 +294,8 @@ class CupIceCream < IceCream
     super.merge({cup_color: cup_color})
   end
 
-  def default_size
-    'M'
+  def default_price
+    100
   end
 end
 
@@ -311,8 +311,8 @@ class CornIceCream < IceCream
     super.merge({corn_flavour: corn_flavour})
   end
 
-  def default_size
-    'S'
+  def default_price
+    150
   end
 end
 ~~~
@@ -326,7 +326,7 @@ end
 ~~~
 class IceCream
   def initialize(args={})
-    @size=args[:size] || default_size
+    @size=args[:size] || default_price
     @price=args[:price]
     @flavour=args[:flavour] || default_flavour
 
