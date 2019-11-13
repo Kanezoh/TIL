@@ -162,6 +162,7 @@ end
 ~~~
 を加えればいい。しかし、eachやらsortやら関連のメソッドを付け加えるたびにいちいち追加しなければならないのは面倒だ。  
 そこで、こんな解決策もある。  
+~~~
 class Options < Array
   def info
     select {|option| option.need_info}
