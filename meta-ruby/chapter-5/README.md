@@ -45,8 +45,8 @@ obj = D.new
 
 obj.m1 => D
 
-C.instance\_methods(false) => [:m1,:m2]
-D.instance\_methods(false) => []
+C.instance_methods(false) => [:m1,:m2]
+D.instance_methods(false) => []
 ~~~
 カレントオブジェクトはDクラスのインスタンスだが、カレントクラスはCクラスとなっている。よって、m２もCクラスのインスタンス
 メソッドとなっている。  
@@ -57,29 +57,29 @@ D.instance\_methods(false) => []
 
 *class_eval*メソッドだ
 
-Module#class\_evalはそこにあるクラスのコンテキストでブロックを評価する。  
+Module#class_evalはそこにあるクラスのコンテキストでブロックを評価する。  
 
 ~~~
-def add\_method\_to(a\_class)
-  a\_class.class\_eval do
+def add_method_to(a_class)
+  a_class.class_eval do
     def m; "HELLO" end
   end
 end
 
-add\_method\_to String
+add_method_to String
 "ABC".m => HELLO
 ~~~  
 
-class\_evalではinstance\_evalとは違う。後者はselfを変更するのみだが、前者はカレントクラスもselfも変更する。  
+class_evalではinstance_evalとは違う。後者はselfを変更するのみだが、前者はカレントクラスもselfも変更する。  
 カレントクラスの変更により、classキーワードと同じようにクラスをオープンする事ができる。  
-また、class\_evalはclassキーワードより柔軟であり、classが定数を必要とするのに対して、クラスを参照する変数ならなんでも良く、
-classキーワードが現在の束縛を捨てて新しいスコープを作る一方でclass\_evalはフラットスコープを持っているなどの特徴がある。  
+また、class_evalはclassキーワードより柔軟であり、classが定数を必要とするのに対して、クラスを参照する変数ならなんでも良く、
+classキーワードが現在の束縛を捨てて新しいスコープを作る一方でclass_evalはフラットスコープを持っているなどの特徴がある。  
 
 ### カレントクラスのまとめ
 
 - Rubyのインタプリタは常にカレントクラスの参照を追跡している。  
 - クラス定義の中では、カレントオブジェクトselfとカレントクラスは一致している。
-- クラスへの参照を持っていれば、クラスはclass\_evalでオープンできる。
+- クラスへの参照を持っていれば、クラスはclass_evalでオープンできる。
 
 ### 5.1.3 クラスインスタンス変数
 
@@ -87,10 +87,10 @@ classキーワードが現在の束縛を捨てて新しいスコープを作る
 
 ~~~
 class A
-  @my\_var = 1
-  def self.read; @my\_var; end
-  def write; @my\_var = 2; end
-  def read; @my\_var; end
+  @my_var = 1
+  def self.read; @my_var; end
+  def write; @my_var = 2; end
+  def read; @my_var; end
 
 end
 
@@ -102,6 +102,6 @@ A.read => 1
 ~~~  
 
 上記のコードではそれぞれスコープも属しているオブジェクトも違う変数が同じ名前で定義されている。  
-２つ目のmy\_varはobjがselfとなる場所に定義されているobjオブジェクトのインスタンス変数である。  
-１つ目のmy\_varはAがselfとなる場所に定義されているAというオブジェクトのインスタンス変数であり、これは_クラスインスタンス変数_と呼ばれる。  
+２つ目のmy_varはobjがselfとなる場所に定義されているobjオブジェクトのインスタンス変数である。  
+１つ目のmy_varはAがselfとなる場所に定義されているAというオブジェクトのインスタンス変数であり、これは_クラスインスタンス変数_と呼ばれる。  
 
