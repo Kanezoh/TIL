@@ -314,3 +314,186 @@ singleton_class.instance_methods.grep(/my\_/) =>[:my_singleton_method]
 
 オブジェクトが特異メソッドを持っていれば、Rubyは特異クラスから探索を始める。  
 <img src="https://github.com/Kanezoh/TIL/blob/master/images/meta-ruby/chapter-5/chapter5_method_search.JPG" width="320px">
+
+#### 大統一理論
+
+1. オブジェクトは１種類しかない。それが通常のオブジェクトかモジュールになる。
+2. モジュールは１種類しかない。それが通常のモジュール、クラス、特異クラスのいずれかになる。
+3. メソッドは１種類しかない。メソッドはモジュール（大半はクラス）に住んでいる。
+4. 全てのオブジェクトは(クラスも含めて)「本物のクラス」を持っている。それが通常のクラスか特異クラス化である。
+5. 全てのクラスは(BasicObjectクラスを除いて)１つの祖先（スーパークラスかモジュール）を持っている。つまり、あらゆる
+クラスがBasicObjectに向かって１本の継承チェーンを持っている。
+6. オブジェクトの特異クラスのスーパークラスはオブジェクトのクラスである。
+7. メソッドを呼び出すときはRubyはレシーバの本物のクラスに向かって「右へ」進み、継承チェーンを「上へ」進む。  
+
+## 5.5 クイズ：モジュールの不具合 
+
+~~~
+module MyModule
+  def self.my_method; 'hello'; end
+end
+
+class MyClass
+  include MyModule
+end  
+
+MyClass.my_method => undefined Error!!!
+~~~  
+
+クラスがモジュールをインクルードするとモジュールの *インスタンスメソッドが* 手に入る。じゃあクラスメソッドは？
+
+### 5.5.1 答え
+
+~~~
+class MyClass
+  class << self
+    include MyModule
+  end
+end
+
+MyClass.my_method => 'hello'
+~~~  
+
+my_methodはMyClassの特異クラスのインスタンスメソッドである、つまりMyClassのクラスメソッドになる。
+これが *クラス拡張* である。  
+もちろんこれはクラス以外のオブジェクトにも適用でき、それは *オブジェクト拡張* と呼ばれる。   
+
+#### Object#extend
+
+クラス拡張とオブジェクト拡張はRubyがそのためにメソッドを提供するほどよく使われるらしい.  
+
+~~~
+module MyModule
+  def my_method; 'hello'; end
+end
+
+obj = Object.new
+obj.extend MyModule
+obj.my_method => 'hello'
+
+class MyClass
+  extend MyModule
+end
+
+MyClass.my_method => 'hello'
+~~~
+
+## 5.6 メソッドラッパー
+
+~~~
+def deserves_a_look?(book)
+  amazon = Amazon.new
+  amazon.reviews_of(book).size > 20
+end
+~~~
+
+このようなコードがある。現時点では正常に動作しているが、例外が考慮されていない。
+amazon云々の部分は外部のライブラリに頼っており、直接コードの編集はできない。どのようにすればメソッドの周囲に機能を追加し、
+全てのクライアントが自動的に新機能を使えるようになるのか。  
+本題に入る前にまずは「エイリアス」を見ていく。  
+
+### 5.6.1 アラウンドエイリアス
+
+Module#alias_method を使えばRubyのメソッドに別名を付けられる。  
+~~~
+class MyClass
+  def my_method; 'my_method()'; end
+  alias_method :m,:my_method
+end
+
+obj = MyClass.new
+obj.my_method => 'my_method()'
+obj.m => 'my_method()'
+~~~  
+
+基本的な動作がわかったところで、応用に入ろう。メソッドにエイリアスを付けた後に再定義をするとどうなるだろう。  
+
+~~~
+class String
+  alias_method :real_length,:length
+
+  def length
+    real_length > 5 ? 'long' : 'short'
+  end
+end
+
+"war and Peace".length => 'long'
+"war and Peace".real_length => 13
+~~~  
+
+これなら元のメソッドをエイリアスで呼び出しつつ、メソッドの再定義ができる。  
+
+1. メソッドにエイリアスをつける
+2. メソッドを再定義する
+3. 新しいメソッドから古いメソッドを呼び出す  
+
+これがアラウンドエイリアスである。  
+
+### 5.6.2 Refinementsでメソッドラッパー  
+
+~~~
+module StringRefinements
+  refine String do
+    def length
+      super > 5 ? 'long' : 'short'
+    end
+  end
+end
+
+using StringRefinements
+"war and Peace".length => 'long'
+~~~  
+
+また、prependを使ってもメソッドをラップできる。  
+Module#prependは継承チェーンでインクルーダーの下にモジュールを挿入できるので、プリペンどしたモジュールがインクルーダーの
+メソッドをオーバーライドする事ができる。  
+
+~~~
+module ExplicitString
+  def length
+    super > 5 ? 'long' : 'short'
+  end
+end
+
+String.class_eval do
+  prepend ExplicitString
+end
+
+"war and Peace".length => 'long'
+~~~
+
+### 5.6.3 Amazonの問題の解決  
+
+以上、３つのメソッドラッパーの定義方法を見てきたが、今回の場合はprependが一番良さそうだ。  
+(モンキーパッチやRefinementsの不思議なルールを考慮しなくても済むという点で)  
+
+~~~
+module AmazonWrapper
+  def reviews_of(book)
+    start = Time.now
+    result = super
+    time_taken = Time.now - start
+    puts "reviews of() took more than #{time_taken} seconds if time_taken > 2
+    result
+  rescue
+    puts "reviews_of() failed"
+    []
+  end
+end
+
+Amazon.class_eval do
+  prepend AmazonWrapper
+end
+~~~
+
+
+## 5.7 クイズ：壊れた計算
+
+割愛
+
+## 5.8 まとめ
+
+- クラス定義がselfとカレントクラスに与える影響を学んだ
+- 特異メソッドや特異クラスと仲良くなり、オブジェクトモデル、メソッド探索について深く理解した
+- クラスインスタンス変数、クラスマクロ、Prependラッパーなどの魔術を覚えた  
+
