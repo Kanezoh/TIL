@@ -309,4 +309,8 @@ singleton_class.class => Class
 def obj.my_singleton_method; end
 singleton_class.instance_methods.grep(/my\_/) =>[:my_singleton_method]
 ~~~
+ 
+### 5.4.3 メソッド探索再び
 
+オブジェクトが特異メソッドを持っていれば、Rubyは特異クラスから探索を始める。  
+<img src="https://github.com/Kanezoh/TIL/blob/master/images/meta-ruby/chapter-5/chapter5_method_search.JPG" width="320px">
