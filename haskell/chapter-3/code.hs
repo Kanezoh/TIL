@@ -53,12 +53,22 @@ add3 y = (\y ->
 -- 1. 2倍にする関数
 --(\x -> x * 2)
 --2. sumSquareOrSquareSum関数
-(\x y ->
-  let sumSquare = (x+y)^2
-      squareSum = (x^2) + (y^2)
-      in
-       if sumSquare > squareSum
-       then sumSquare
-       else squareSum
-)
+--(\x y ->
+--  let sumSquare = (x+y)^2
+--      squareSum = (x^2) + (y^2)
+--      in
+--       if sumSquare > squareSum
+--       then sumSquare
+--       else squareSum
+--)
+--3. doubleDouble関数
+--(\x -> 
+--  (\y -> *2) *2) 
+--
+--3-2 
+counter x = (\x -> x + 1)
+            ((\x -> x +1 )
+            ((\x -> x) x))
+
+
 
