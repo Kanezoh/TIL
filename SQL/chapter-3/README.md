@@ -74,5 +74,41 @@ GROUP BYに指定する列を集約キーやグループ化列と呼ぶ。
   COUNTの結果によって条件を分岐させたりしたいときにWHERE句にCOUNT(\*) = 2とか書きたいけどこれはダメ。
   集約関数はSELECT、HAVING句以外では使えない
 
+## HAVING句
+
+集約した結果を条件に指定したい場合はHAVING句を使う。  
+~~~
+SELECT shohin_bunrui,COUNT(\*)
+  FROM Shohin
+GROUP BY shohin_bunrui
+  HAVING COUNT(\*) =2
+~~~  
+
+HAVING句でも  
+- 定数
+- 集約関数
+- 集約キー
+以外は書けないという制限がある。  
+
+### WHERE句との使い分け
+
+HAVING句でもWHERE句でも集約キーに関する条件は同じように書ける。結果は同じだが、WHERE句に書くほうがいいらしい。  
+- HAVINGは*グループ*に対する条件指定で、*行*の条件指定はWHEREに書くべき
+- WHERE句のほうが処理速度が速い
+ってのが理由。  
+
+## 検索結果の並べ替え
+
+ORDER BYを使えば表示順の指定ができる、ちなみにこれを指定しないと順番は*全てランダム*になるので注意！  
+~~~
+SELECT ~
+  FROM Shohin
+ORDER BY hanbai_tanka;
+~~~  
+必ず*SELECT文の最後*に置く。デフォルトで昇順、降順にするには ``` ORDER BY hanbai_tanka DESC```のように書く。  
+複数のソートキー指定も可能、左に書いたのが優先される。  
+NULLは先頭か末尾にまとめられる、DBMSによっては指定できる。  
+また、ORDER BYではSELECTで付けた別名も使用可能。  
+
 
 
