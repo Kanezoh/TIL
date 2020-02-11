@@ -16,4 +16,39 @@ AS
 <SELECT文>
 ~~~  
 SELECT文の列とビューの列は並び順で一致する。  
+e.g.)  
+~~~
+CREATE VIEW ShohinSum (shohin_bunrui, cnt_shohin)
+AS
+SELECT shohin_bunrui, COUNT(*)
+  FROM Shohin
+GROUP BY shohin_bunrui;
+~~~  
+実行するとビューが作成される、これはテーブルと同じように使える。  
+e.g.)  
+~~~
+SELECT shohin_bunrui, cnt_shohin
+  FROM ShohinSum;
+~~~  
+上の文はビューのSELECT文を実行した後に、さらにSELECT文が実行されるという構成になっている。  
+ちなみに、ビューを元にさらにビューを定義することも可能だが、パフォーマンスが下がるのでやめたほうがいい。  
+
+### ビューの制限事項
+
+1. ビュー定義でORDER BYは使えない
+   **行には順序がない**というルールからテーブルと同様にビューでもORDER BYは使えない。
+2. ビューに対する更新
+   テーブルと同様にビューでも更新系SQL文が実行できるが厳しい制限がつく。
+   1. SELECT句にDISTINCTが含まれていない。
+   2. FROM句に含まれるテーブルが１つだけである。
+   3. GROUP BY句を使用していない。
+   4. HAVING句を使用していない。
+
+### ビューの削除
+
+~~~
+DROP VIEW <ビュー名>
+~~~  
+
+
 
