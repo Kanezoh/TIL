@@ -30,6 +30,22 @@ module Sample
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
+    config.generators do |g|
+      g.template_engine false
+      g.javascripts false
+      g.stylesheets false
+      g.helper false
+      g.test_framework :rspec,
+      fixtures: true,
+      fixture_replacement: :factory_bot,
+      view_specs: false,
+      routing_specs: false,
+      helper_specs: false,
+      controller_specs: false,
+      request_specs: true
+    end    
+
     config.api_only = true
+    config.middleware.use ActionDispatch::Flash
   end
 end
