@@ -6,28 +6,30 @@ ua = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML,
 #ヘッドレスモード
 caps = Selenium::WebDriver::Remote::Capabilities.chrome('chromeOptions' => {args: ["--headless","--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--user-agent=#{ua}", 'window-size=1280x800']})
 driver = Selenium::WebDriver.for :chrome, desired_capabilities: caps
+wait = Selenium::WebDriver::Wait.new(:timeout => 60) 
 
 #スクレイピングしたいサイト
 driver.navigate.to "https://www.rakuten.co.jp/"
 sleep 2
 
-search_box = driver.execute_script("document.getElementById('sitem').value='マフラー　夏用　男'")
-search_btn = driver.find_element("document.getElementById('sitem').click()")
+driver.execute_script("document.getElementById('sitem').value='マフラー　夏用　男'")
+driver.execute_script("document.getElementById('searchBtn').click()")
 sleep 2
 
-#scarfs =  driver.find_elements(:css,'div.title h2 a')
-#scarfs.each do |scarf|
-#  puts scarf.text
-#end
-#
-#max_page = driver.find_elements(:css,'div.dui-pagination a').size
-#
-#
-#max_page.times do |n|
-#  if n == max_page - 1
-#    driver.save_screenshot("/Users/kanekoshunya/Downloads/last_page.png") and break
-#  end
-#  to_next_btn = driver.find_element(:class,'nextPage')
-#  sleep 2
-#  to_next_btn.execute_script("click();")
-#end
+scarfs =  driver.find_elements(:css,'div.title h2 a')
+scarfs.each do |scarf|
+  puts scarf.text
+end
+
+loop do
+  wait.until {driver.find_element(:class, 'pagination').displayed?}
+  has_next_btn = driver.execute_script("return (document.getElementsByClassName('nextPage').length == 1)")
+
+  if has_next_btn 
+    sleep 2
+    driver.execute_script("document.getElementsByClassName('nextPage')[0].click()")
+  else
+    driver.save_screenshot("/Users/kanekoshunya/Downloads/last_page2.png")
+    break
+  end
+end
