@@ -50,5 +50,67 @@ SELECT shohin_bunrui, cnt_shohin
 DROP VIEW <ビュー名>
 ~~~  
 
+## サブクエリ
+サブクエリ→**使い捨てのビュー**
+ビューがSELECT文だけを保存してユーザの利便性を高める一方、サブクエリは**ビュー定義のSELECT文**をそのままFROM句に持ち込んだもの。  
+~~~
+商品分類ごとに総数を表示するビュー
+CREATE VIEW ShohinSum (shohin_bunrui, cnt_shohin)
+AS
+SELECT shohin_bunrui, COUNT(*)
+  FROM Shohin
+GROUP BY shohin_bunrui;
 
+ビューの確認
+SELECT shohin_bunrui, cnt_shohin
+  FROM ShohinSum;
+~~~  
 
+同じ事をサブクエリでやってみる。  
+~~~
+SELECT shohin_bunrui, cnt_shohin
+  FROM (SELECT shohin_bunrui, COUNT(*) AS cnt_shohin
+          FROM Shohin
+        GROUP BY shohin_bunrui) AS ShohinSum;
+~~~  
+ShohinSumというのがこのサブクエリの名前だが、これはビューと違って保存はされない。名前の通りサブ(下位)のクエリ(問い合わせ)である。処理の流れ的には内側のSELECT文(サブクエリ)が実行されたのちに外側のクエリが実行される。  
+また、サブクエリはネストすることもできるが、読みにくいから出来るだけやらないほうがいい。  
+
+### スカラ・サブクエリ
+
+**必ず１行1列だけの戻り値を返す**サブクエリのこと。  
+
+#### 活用例：WHERE句で使う
+
+「販売単価が全体の平均単価より高い商品だけを検索する」時にはどういう風に書くか。  
+~~~
+SELECT shohin_id, shohin_mei, hanbai_tanka
+  FROM Shohin
+WHERE hanbai_tanka > AVG(hanbai_tanka);
+~~~  
+それっぽいけど集約関数はWHERE句には使えない制限がある。  
+そこでサブクエリの出番。まず、販売単価の平均を求めるクエリは  
+~~~
+SELECT AVG(hanbai_tanka)
+  FROM Shohin;
+~~~  
+これを実行すると、  
+~~~
+          avg          
+-----------------------
+ 2097.5000000000000000
+(1 row)
+~~~  
+こんな感じになる。これは**スカラ値**(１行1列)であることは明白。  
+このサブクエリを利用すれば、  
+~~~
+SELECT shohin_id, shohin_mei, hanbai_tanka
+  FROM Shohin
+WHERE hanbai_tanka > (SELECT AVG(hanbai_tanka)
+                        FROM Shohin);
+~~~  
+最初の文はこのように書ける。サブクエリの部分は実行結果の2097.5に置き換わるため、有効な文となる。  
+ちなみに、サブクエリはWHERE句に限らずほとんどどの句でも使える。  
+ただ、**サブクエリが絶対に複数行を返さないようにする**ことだけは気をつけよう。  
+
+        
