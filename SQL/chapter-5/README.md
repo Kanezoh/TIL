@@ -1,6 +1,6 @@
 # 第５章　ビュー
 
-##ビューとは
+## ビューとは
 テーブルと同じものだが、１つだけ「実際のデータを保存しているか否か」という点で違いがある。  
 通常のテーブルではデータを記憶装置に保存しているが、ビューの場合はデータをどこにも保存していない。ビューは「SELECT文そのもの」を保存し、内部的にその文を実行、一時的に仮想のテーブルを作っている。  
 
@@ -113,4 +113,30 @@ WHERE hanbai_tanka > (SELECT AVG(hanbai_tanka)
 ちなみに、サブクエリはWHERE句に限らずほとんどどの句でも使える。  
 ただ、**サブクエリが絶対に複数行を返さないようにする**ことだけは気をつけよう。  
 
-        
+## 相関サブクエリ
+
+相関サブクエリは「商品分類ごとの平均販売単価を比較する」ような状況で使われる。先ほどの通常のサブクエリでは全体の平均単価を条件として比較することができたが、相関サブクエリでは条件を絞った状況下での条件比較を行うことができる。  
+まずは商品分類ごとの平均価格を求める方法である。  
+~~~
+SELECT AVG(hanbai_tanka)
+  FROM Shohin
+GROUP BY shohin_bunrui;
+~~~  
+これをそのままWHEREに渡しても複数行の結果となるため実行できない。  
+e.g.)  
+~~~
+SELECT shohin_id, shohin_mei, hanbai_tanka
+  FROM Shohin
+WHERE hanbai_tanka > (SELECT AVG(hanbai_tanka)
+                        FROM Shohin
+                      GROUP BY shohin_bunrui);
+~~~  
+ここで相関サブクエリが使える。１行追加するだけで求めたい結果が得られる。  
+~~~
+SELECT shohin_id, shohin_mei, hanbai_tanka
+  FROM Shohin AS S1
+WHERE hanbai_tanka > (SELECT AVG(hanbai_tanka)
+                        FROM Shohin AS S2
+                      WHERE S1.shohin_bunrui = S2.shohin_bunrui
+                      GROUP BY shohin_bunrui);
+~~~           
