@@ -140,3 +140,4 @@ WHERE hanbai_tanka > (SELECT AVG(hanbai_tanka)
                       WHERE S1.shohin_bunrui = S2.shohin_bunrui
                       GROUP BY shohin_bunrui);
 ~~~           
+今日はバイト
