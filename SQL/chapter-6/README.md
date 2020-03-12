@@ -288,3 +288,58 @@ int_col
 #### COALESCE - NULLを値へ変換
 
 コアレスと読む、可変個の引数を受け取り左から順に引数を見て、最初にNULLでない値を返す。  
+
+
+## 述語
+述語：**戻り値が真偽値になる関数**のこと、> = などの比較演算子も述語の一種。  
+
+### LIKE述語
+
+文字列の部分一致検索を行うための述語。  
+一致検索の種類  
+- 前方一致: 検索対象文字列が対象文字列の最初にある場合のみ一致  
+  ~~~
+  SELECT * FROM SampleLike
+  WHERE str LIKE 'ddd%';
+  ~~~  
+
+- 中間一致: 検索対象文字列が対象文字列の「どこか」にあれば一致
+  ~~~
+  SELECT * FROM SampleLike
+  WHERE str LIKE '%ddd%';
+  ~~~  
+- 後方一致: 検索対象文字列が対象文字列の最後にある場合のみ一致
+  ~~~
+  SELECT * FROM SampleLike
+  WHERE str LIKE '%ddd';
+  ~~~  
+
+### BETWEEN述語
+
+範囲検索を行う述語。  
+~~~
+SELECT * FROM Shohin
+WHERE hanbai_tanka BETWEEN 100 AND 1000;
+~~~  
+
+のように書けば販売単価が100~1000の間の商品を取得できる。  
+
+### IS NULL, IS NOT NULL
+NULL判定を行うための特殊な述語、通常の比較演算子ではNULLを判定できないので注意。  
+
+### IN述語
+ORの便利な省略形。
+~~~
+SELECT * FROM Shohin
+WHERE shiire_tanka = 320
+OR shiire_tanka = 500
+OR shiire_tanka = 5000;
+~~~  
+を  
+~~~
+SELECT * FROM Shohin
+WHERE shiire_tanka IN (320, 500, 5000);
+~~~  
+のように書き換えられる。  
+否定形のNOT_INもある。  
+
