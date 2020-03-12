@@ -225,9 +225,66 @@ SELECT str1, SUBSTRING(str1 FROM 3 FOR 2) AS sub_str
 ~~~  
 標準SQLで認められている機能だが、**POSTGRESQLとMySQLのみ**でしか使えない。  
 
+### 日付関数
 
+DBMSによって実装が異なるので標準SQLで定められているものだけ紹介。
 
+#### CURRENT_DATE - 現在の時刻
 
+SQLが実行された日付を返す。
+~~~
+SELECT CURRENT_DATE;
+~~~  
+~~~
+date
+-------
+2020-03-12
+~~~  
 
+#### CURRENT_TIME - 現在の時間
 
+SQLを実行した時間を返す。
+~~~
+SELECT CURRENT_TIME;
+~~~  
+~~~
+timetz
+-------
+17:26:50.995+09
+~~~  
 
+#### CURRENT_TIMESTAMP - 現在の日時
+
+CURRENT_DATEとCURRENT_TIMEを合体させたような機能。
+
+#### EXTRACT - 日付要素の切り出し
+
+日付データから「年」とか「日」を切り出す時に使う。
+~~~
+SELECT CURRENT_TIMESTAMP,
+EXTRACT(YEAR FROM CURRENT_TIMESTAMP) AS year
+~~~  
+
+~~~
+ now                       | year |
+2020-03-12 21:15:33.987+09   2020
+~~~  
+
+### 変換関数
+
+#### CAST - 型変換
+型変換を行う関数、DBMSによって書き方が異なるので注意。例はPostgreSQL
+
+~~~
+SELECT CAST('0001' AS INTEGER) AS int_col
+~~~  
+
+~~~
+int_col
+---------
+1
+~~~  
+
+#### COALESCE - NULLを値へ変換
+
+コアレスと読む、可変個の引数を受け取り左から順に引数を見て、最初にNULLでない値を返す。  
