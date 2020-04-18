@@ -347,4 +347,49 @@ WHERE shiire_tanka IN (320, 500, 5000);
 
 ### EXISTS述語
 
-サブクエリを引数にとって**ある条件に合致するレコードが存在するか否か**を調べる。  
+サブクエリを引数にとって**ある条件に合致するレコードが存在するか否か**を調べる。
+
+## CASE式
+
+e.g.)
+~~~
+CASE WHEN <評価式> THEN <式>
+     WHEN <評価式> THEN <式>
+     WHEN <評価式> THEN <式>
+     WHEN <評価式> THEN <式>
+        ・
+        ・
+        ・
+    ELSE <式>
+END
+~~~  
+
+評価式は「列=値」のように真理値を返す式、この値がTRUEであればTHEN以降の式が返されてCASE式は終了する。  
+どれもFALSEであれば最後にELSEで指定した式が返される。  
+
+### 使い方
+
+~~~
+SELECT shohin_mei,
+       CASE WHEN shohin_mei = '衣服'
+       THEN 'A:' || shohin_bunrui
+       CASE WHEN shohin_mei = '事務用品'
+       THEN 'B:' || shohin_bunrui
+       CASE WHEN shohin_mei = 'キッチン用品'
+       THEN 'C:' || shohin_bunrui
+       ELSE NULL
+    END AS abc_shohin_bunrui
+FROM Shohin;
+~~~
+
+~~~ 
+実行結果
+shohin_mei  | abc_shohin_bunrui
+Tシャツ      | A:衣服
+ホチキス     | B:事務用品
+包丁         | C:キッチン用品
+~~~  
+
+**※注意点**
+- ELSE NULL は省略しても同じことだが明示的に書いておいた方が良い
+- 最後のENDを忘れやすいので忘れないように！
