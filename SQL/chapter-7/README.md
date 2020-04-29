@@ -103,3 +103,30 @@ shohin_id | shohin_mei
 ~~~  
 
 ちなみに(2-4)と(4-2)の結果が違うように順番を入れ替えると結果も変わる。
+
+
+## 7-2 結合
+
+テーブルを行方向ではなく列方向に連結する演算。  
+
+### 内部結合 - INNER JOIN
+
+e.g.)   
+~~~
+SELCT TS.tenpo_id, TS.tenpo_mei, TS.shohin_id, S.shohin_mei, S.hanbai_tanka
+  FROM TenpoShohin AS TS INNER JOIN Shohin AS S
+    ON TS.shohin_id = S.shohin_id;
+~~~  
+
+FROM句に結合する複数のテーブルを記述、そしてONで結合に使用するキーを指定するのがポイント。  
+テーブルを結合してしまえば、普通のテーブルのようにWHEREで条件を指定したり、ORDER BYで並べ替えたりすることが可能。  
+
+### 外部結合 - OUTER JOIN
+
+e.g.)   
+~~~
+SELCT TS.tenpo_id, TS.tenpo_mei, TS.shohin_id, S.shohin_mei, S.hanbai_tanka
+  FROM TenpoShohin AS TS RIGHT OUTER JOIN Shohin AS S
+    ON TS.shohin_id = S.shohin_id;
+~~~  
+
