@@ -130,3 +130,24 @@ SELCT TS.tenpo_id, TS.tenpo_mei, TS.shohin_id, S.shohin_mei, S.hanbai_tanka
     ON TS.shohin_id = S.shohin_id;
 ~~~  
 
+外部結合では片方にしか存在しないデータでも必ず出力する。
+RIGHT OUTER　か　LEFT OUTERを指定する。これはどちらのテーブルをマスタにするかを指定していて、
+指定した方のデータは対応するもう片方のテーブルの値がなくても出力する。  
+
+ちなみに、結合では3つ以上のテーブルも結合できる。その場合は2つのテーブルを結合した結果をもう一つのテーブルと結合して...のような流れになる。  
+
+### クロス結合 - CROSS JOIN
+
+実務ではまず使われることがない結合方法、2つのテーブルについて**全ての組み合わせ**を出力する。  
+
+e.g.)  
+~~~
+SELECT TS.tenpo_id, TS.tenpo_mei, TS.shohin_id, S.shohin_mei
+  FROM TenpoShohin AS TS CROSS JOIN Shohin AS S;
+~~~  
+
+実務で使われない理由
+- 結果に使い道がない  
+- 演算に多くの時間とマシンパワーを使用してしまう  
+
+内部結合はクロス結合の組み合わせの一部であるという意味で「内部」、外部結合はクロス結合に存在しない組み合わせを持つという意味で「外部」である。
