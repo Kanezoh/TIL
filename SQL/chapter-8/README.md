@@ -87,10 +87,60 @@ SELECT CASE WHEN GROUPING(shohin_bunrui) = 1,
             ELSE shohin_bunrui END AS shohin_bunrui,
       CASE WHEN GROUPING(torokubi) = 1,
             THEN '登録日　合計'
-            ELSE torokubi END AS torokubi,
+            ELSE CAST(torokubi AS VARCHAR(16)) END AS torokubi,
       SUM(hanbai_tanka) AS sum_tanka
 FROM Shohin
 GROUP BY ROLLUP(shohin_bunrui, torokubi);
 ~~~  
 
+### CUBE - データで積み木を作る
+
+~~~
+SELECT CASE WHEN GROUPING(shohin_bunrui) = 1,
+            THEN '商品分類　合計'
+            ELSE shohin_bunrui END AS shohin_bunrui,
+      CASE WHEN GROUPING(torokubi) = 1,
+            THEN '登録日　合計'
+            ELSE CAST(torokubi AS VARCHAR(16)) END AS torokubi,
+      SUM(hanbai_tanka) AS sum_tanka
+FROM Shohin
+GROUP BY CUBE(shohin_bunrui, torokubi);
+~~~  
+
+~~~  
+shohin_bunrui      torokubi       sum_tanka
+商品分類　合計       登録日合計       16780
+商品分類　合計      2008-04-28       880
+商品分類　合計      2009-01-05       6800
+商品分類　合計      2009-09-11       500
+商品分類　合計      2009-09-20       4500
+商品分類　合計      2009-11-11       100
+商品分類　合計                       4000
+
+# 以下ROLLUPと同じ
+~~~  
+
+CUBEでは
+1. GROUP BY()
+2. GROUP BY(shohin_bunrui)
+3. GROUP BY(torokubi)
+4. GROUP BY(shohin_bunrui, torokubi)
+
+と、先ほどの例と比べてtorokubiだけで集約化したデータも含まれている。  
+このようにCUBEはGROUP BYに与えられた集約キーの「全ての可能な組み合わせ」を一つの結果にする機能である。  
+
+
+### GROUPING SETS - 欲しい積み木だけ取得  
+
+GROUPING SETSを使うと、ROLLUPやCUBEから欲しい結果だけを取得できる。例えばshohin_bunruiとtorokubiのそれぞれを
+単独で集約キーとして指定した結果のみを取得したい場合は   
+~~~
+SELECT CASE WHEN GROUPING(torokubi) = 1,
+            THEN '登録日　合計'
+            ELSE CAST(torokubi AS VARCHAR(16)) END AS torokubi,
+      SUM(hanbai_tanka) AS sum_tanka
+FROM Shohin
+GROUP BY GROUPING SETS(shohin_bunrui, torokubi);
+~~~ 
+のように書けば良い。 
 
