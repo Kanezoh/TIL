@@ -143,4 +143,4 @@ FROM Shohin
 GROUP BY GROUPING SETS(shohin_bunrui, torokubi);
 ~~~ 
 のように書けば良い。 
-
+ 
