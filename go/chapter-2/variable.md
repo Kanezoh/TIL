@@ -186,6 +186,64 @@ x,y = 1,2
 z := x + y
 ~~~  
 
+## 関数
+
+Goにはオブジェクト指向機能がないので関数の定義と構造体の定義が中心的な作業となる。  
+
+~~~
+func plus(x,y, int) int {
+  return x + y
+}
+plus(1,2) // => 3
+~~~  
+
+### 戻り値のない関数  
+~~~
+func hello(){
+  fmt.Println("Hello, World!")
+  return
+}
+~~~  
+戻り値の型定義を省略すると戻り値のない関数になる。
+
+### 複数の戻り値  
+~~~
+package main
+
+import "fmt"
+
+func div(a,b int) (int,int) {
+  q := a / b
+  r := a % b
+  return q,r
+}
+
+func main(){
+  q, r := div(19, 7)
+}
+~~~  
+
+### 戻り値の破棄
+_を使うと戻り値を破棄できる。  
+~~~
+q, _ := div(19,7)
+_, r := div(19,7)
+
+_, _ := div(19,7) // => コンパイルエラー
+~~~  
+
+### エラー処理
+Goにはエラー処理がないのでエラーを表す戻り値を使ってエラーを表す。  
+~~~
+result, err := doSomething()
+if (err != nil){
+  // エラー処理
+}
+
+
+
+
+
 
 
 
