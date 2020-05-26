@@ -328,10 +328,92 @@ c := 3
 return func() int {
   return b
 }
+~~~  
 
+### クロージャによるジェネレータ
 
+~~~
+package main
 
+import (
+  "fmt"
+)
 
+func integers() func() int {
+  i := 0
+  return func() int {
+    i += 1
+    return i
+  }
+}
+
+func main(){
+  ints := integers()
+
+  fmt.Println(ints()) // => 1
+  fmt.Println(ints()) // => 2
+  fmt.Println(ints()) // => 3
+
+  otherInts := integers()
+  // 別のクロージャの場合は値は別のものが使用される
+  fmt.Println(otherInts()) => 1
+}
+~~~  
+
+## 定数
+~~~
+// 予約語constで定義
+const X = 1
+
+// 複数の定数をまとめて定義
+const (
+  X = 1
+  Y = 2
+  Z = 3
+)
+~~~  
+
+~~~
+package main
+
+import (
+  "fmt"
+)
+
+const ONE = 1 //パッケージに定義された定数
+
+func one() (int,int){
+  const TWO = 2 // 関数内に定義された定数
+  return ONE, TWO 
+}
+
+func main(){
+  x,y := one()
+  fmt.Printf("x=%d,y=%d\n", x, y) // => "x=1,y=2"
+}
+~~~  
+
+普通に定義すると型なし定数になる。定数名の後に型名を書けば型あり定数になる。  
+
+## スコープ
+
+**パッケージに定義された定数、変数、関数などが他のパッケージから参照可能であるかは「識別子の一文字目が大文字であるか」
+によって決定される。**
+他のパッケージで定義された値を使うには```パッケージ名.変数名```のようにする。  
+
+### importの詳細
+
+~~~
+package main
+
+import(
+  f "fmt" // パッケージ名fmtをfで上書き
+) 
+
+func main(){
+  f.Println("Hello, World!")
+}
+~~~  
 
 
 
