@@ -239,6 +239,95 @@ result, err := doSomething()
 if (err != nil){
   // エラー処理
 }
+~~~  
+
+### 無名関数
+関数リテラルを使って名前のない関数を定義できる。  
+~~~  
+f := func(x,y,int) int {return x + y}
+f(2,3) // => 5
+~~~  
+
+#### 関数を返す関数
+
+~~~
+package main
+
+import (
+  "fmt"
+)
+
+func returnFunc() func() {
+  return func(){
+    fmt.Println("I'm a function")
+  }
+}
+
+func main(){
+  f := returnFunc()
+  f() //=> I'm a function
+
+  returnFunc()() // => 変数を経由せずとも呼べる
+}
+~~~  
+
+#### 関数を引数にとる関数
+~~~
+package main
+
+import (
+  "fmt"
+)
+
+func callFunction(f func()) {
+  f()
+}
+
+func main(){
+  callFunction(func()){
+    fmt.Println("I'm a function")
+  })
+}
+~~~  
+
+#### クロージャ
+Goの無名関数は「クロージャ」である。  
+~~~  
+package main
+
+import (
+  "fmt"
+)
+
+func later() func(string) string {
+  var store string  // => クロージャから参照されている
+
+  return func(next string) string {
+    s := store // => 変数storeの参照
+    store = next // => 変数storeへの代入
+    return s
+  }
+}
+
+func main(){
+  f := later()
+
+  fmt.Println(f("Golang")) // => ""
+  fmt.Println(f("is")) // => "Golang"
+  fmt.Println(f("good")) // => "is"
+}
+~~~  
+
+通常ローカル変数は関数の終了と共に値が破棄されるが、内部的にはクロージャに属する変数として
+値が保存されている。ちなみにクロージャ内で参照されていない変数に関しては値は捕捉されない。  
+
+~~~
+a := 1
+b := 2 // => bだけ参照される
+c := 3
+return func() int {
+  return b
+}
 
 
 
