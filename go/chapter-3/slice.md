@@ -188,3 +188,48 @@ func sum(s ...int) int {
 }
 ~~~  
 
+### 参照型としてのスライス
+
+~~~
+func pow(a [3]int){
+  for i,v := range a {
+    a[i] = v * v
+  }
+  return
+}
+
+func main(){
+  a := [3]int{1,2,3}
+  pow(a)
+  fmt.Println(a) => "[1,2,3]"
+}
+~~~  
+
+配列を引数にとった関数の呼び出しでは引数は値渡しで行われるため、メイン関数内のaと関数pow内のものは別である。  
+つまり2乗したところでそれは反映されない。スライスは参照渡しで行われるため、出力は異なる。  
+~~~
+func pow(a []int){
+  for i,v := range a{
+    a[i] = v * v
+  }
+  return
+}
+
+func main(){
+  a := []int{1,2,3}
+  pow(a)
+  fmt.Println(a) => "[1,4,9]"
+}
+~~~  
+スライス型は参照渡しのためメイン関数内のスライスとpow関数のスライスは同じメモリ領域に対する処理になる。  
+
+~~~
+var(
+  a [3]int
+  s []int
+)
+fmt.Println(a) => "[0,0,0]"
+fmt.Println(s === nil) => "true"
+~~~  
+
+他にも配列型とスライスにはnilを値として取りうるか、という違いもある。int
