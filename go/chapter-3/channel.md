@@ -97,3 +97,91 @@ ch <- 'D' // デッドロック発生
 - バッファサイズが0、またはバッファ内に空きがないチャネルへの送信
 の２パターン。  
 
+## len
+チャネルのバッファ内に溜められているデータの数を取得できる。  
+~~~  
+ch := make(chan string, 3)
+
+ch <- "Apple"
+len(ch) // == 1
+ch <- "Banana" 
+len(ch) // == 2
+~~~  
+
+## cap
+チャネルのバッファサイズを取得できる。
+~~~  
+ch := make(chan string)
+cap(ch) // == 0
+
+ch := make(chan string, 3)
+cap(ch) // == 3
+~~~  
+
+## close
+チャネルは**クローズ(closed)**という状態を持っている。makeで生成したチャネルはオープンの状態から始まるが、明示的にクローズすることもできる。クローズには組み込み関数のcloseを使う。クローズされたチャネルに送信するとランタイムパニックを起こす。  
+~~~  
+ch := make(chan int, 1)
+close(ch)
+ch <- 1 // ランタイムパニック
+~~~  
+クローズされたチャネルから受信するのは問題ない、データが空になったりクローズされたりしても、チャネルが内包する型の初期値を送信し続ける。  
+~~~  
+ch := make(chan int, 3)
+ch <- 1
+ch <- 2
+ch <- 3
+close(ch)
+<-ch // == 1
+<-ch // == 2
+<-ch // == 3
+<-ch // == 0
+<-ch // == 0
+~~~  
+
+チャネルがクローズされているかどうかは受信するときに変数を2つ割り当てることで判断できる。  
+~~~  
+ch := make(chan int)
+close(ch)
+i, ok := <- ch // i == 0, ok == false
+~~~  
+第二引数目がfalseを返すのは厳密にいうと**チャネルのバッファ内が空で、かつクローズされた状態**になる。
+チャネルのバッファ内にまだ受信可能なデータが残っている場合はokの値はtrueを返す。  
+
+### ゴルーチンとクローズの例
+~~~
+package main
+
+import(
+  "fmt"
+  "time"
+)
+
+func receive(name string, ch <-chan int) {
+  for {
+    i, ok := <- ch
+    if ok == false {
+      break
+    }
+    fmt.Println(name, i)
+  }
+  fmt.Println(name + "is done.")
+}
+
+func main() {
+  ch := make(chan int, 20)
+
+  go receive("1st goroutine", ch)
+  go receive("2nd goroutine", ch)
+  go receive("3rd goroutine", ch)
+
+  i := 0
+  for i < 100 {
+    ch <- i
+    i ++
+  }
+  close(ch)
+
+  time.Sleep(3 * time.Second)
+}
+~~~  
