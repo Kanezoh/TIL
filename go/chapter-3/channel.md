@@ -40,3 +40,46 @@ ch <- 5
 i := <-ch
 ~~~  
 <の向きでデータをやりとりしている向きがわかる。  
+
+## チャネルとゴルーチン
+チャネルはキューとしてのデータ構造を持つが、単純なキューとして使えるようにデザインされていない。  
+
+~~~  
+func main() {
+  ch := make(chan int)
+  fmt.Println(<-ch)
+}
+~~~  
+これを実行すると、  
+```fatal error: all goroutines are asleep - deadlock!```  
+のエラーが出る。上のコードはチャネルから受信する処理だが、実行時に存在するのは関数mainを処理するゴルーチン一つだけ。  
+このゴルーチンが受信を待つために眠ったものの、他にデータを送信してくれるチャネルがないためにデッドロックを検知したと言う理屈。  
+
+チャネルはゴルーチン間でデータを処理するための仕組みであり、複数のゴルーチンが必要になる。  
+~~~  
+package main
+
+import(
+  "fmt"
+)
+
+func receiver(ch <-chan int) {
+  for {
+    i := <- ch
+    fmt.Println(i)
+  }
+}
+
+func main() {
+  ch := make(chan int)
+
+  go receiver(ch)
+
+  i := 0
+  for i < 5 {
+    ch <- i
+    i ++
+  }
+}
+~~~  
+上記のコードではmain関数のゴルーチンがreceiver側のゴルーチンに値を送信し続け、receiver側ではchに渡された引数をひたすら出力し続ける。  
