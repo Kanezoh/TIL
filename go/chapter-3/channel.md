@@ -185,3 +185,97 @@ func main() {
   time.Sleep(3 * time.Second)
 }
 ~~~  
+
+## チャネルとfor
+
+チャネルに対しても「範囲節によるfor」を適用できる、チャネルからひたすら受信し続ける時に有用。  
+~~~
+ch := make(chan int 3)
+ch <- 1
+ch <- 2
+ch <- 3
+for i := range ch {
+  fmt.Println(i)
+}
+# =>
+1
+2
+3
+~~~  
+
+## select
+~~~
+e1 := <- ch1
+e2 := < -ch2
+~~~  
+ch1, ch2はチャネル型、e1,e2はチャネルを内包するデータ型である単純な例を考える。  
+ch1チャネルからデータが受信できない場合、この処理の流れを実行するゴルーチンは停止し、いつまでも次の処理にたどり着けない。  
+Goにはこのような問題を解決するために、ゴルーチンを停止させずに複数のチャネルを操作する構文が用意されている。  
+~~~
+select {
+  case e1 := <- ch1
+    // ch1で処理が成功した場合の処理
+  case e2 := <- ch2
+    // ch2で処理が成功した場合の処理
+  default:
+    // その他の処理
+}
+~~~  
+select文のcase式は全てチャネル操作を伴っている必要がある。  
+~~~
+// ch1から受信
+case e1 := < -ch1
+// ch2から受信(2変数)
+case e2, ok := <-ch2
+//ch3へe3を送信
+case ch3 <- e3
+// ch5から受信したデータをch4へ送信
+case ch4 <- (<-ch5)
+~~~  
+
+### チャネルとselectを利用したサンプルコード
+
+~~~  
+ch1 := make(chan int)
+ch2 := make(chan int)
+ch3 := make(chan int)
+
+// ch1から受信した整数を2倍してch2へ送信
+go func() {
+  for{
+    i := <-ch1
+    ch2 <- (i * 2)
+  }
+}()
+// ch2から受信した整数を1減算してch3へ送信
+go func() {
+  for {
+    i := <- ch2
+    ch3 <- (i - 1)
+  }
+}()
+n := 1
+LOOP:
+for {
+  select {
+    case ch1 <- n:
+      n++
+    case i := <-ch3
+      fmt.Println("received", i)
+    default:
+      if n > 100 {
+        break LOOP
+      }
+  }
+}
+// 出力結果
+received 1
+received 3
+received 5
+received 7
+received 9
+received 11
+received 13
+received 15
+~~~  
+このように、select文を使うことで非同期で行われるゴルーチンの処理を適切に制御できる。
