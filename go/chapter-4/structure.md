@@ -347,3 +347,40 @@ t.method2() // コンパイルエラー
 t.field2 // コンパイルエラー
 ~~~  
 構造体のフィールドを全て非公開にして公開されたメソッドから操作するようにすればメンテナンス性の高いパッケージを作ることができる。  
+
+### スライスと構造体
+スライスと構造体を組み合わせる処理はGoでは頻繁に現れるパターン。  
+~~~  
+type Point struct{ X, Y int }
+
+ps := make([]Point, 5)
+for _, p := range ps {
+  fmt.Println(p.X, p.Y)
+}
+// 出力
+0 0
+0 0
+0 0
+0 0
+0 0
+~~~  
+[]*Pointのように複雑な宣言に対してtypeによるエイリアスを定義してそこにメソッドを定義するという使い方もできる。  
+
+~~~  
+type Points []*Point
+
+func (ps Points) ToString() string {
+  str := ""
+  for _, p range ps {
+    if str != "" {
+      str += ","
+    }
+    if p == nil {
+      str += "<nil>"
+    } else {
+      str += fmt.Sprintf("[%d, %d]", p.X, p.Y)
+    }
+  }
+  return str
+}
+~~~  
