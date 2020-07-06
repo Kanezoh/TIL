@@ -316,3 +316,34 @@ p2.Set(1,2)
 p2.x // == 1
 p2.y // == 2
 ~~~  
+
+### フィールド、メソッドの可視性
+
+関数、定数など識別子全体に当てはまるルールとして最初の文字が大文字だったら外部のパッケージから参照可能という特徴がある。   
+~~~
+package foo
+
+type T struct {
+  Field1 int // 公開フィールド
+  field2 int // 非公開フィールド
+}
+// 公開メソッド
+func (t *T) Method1() int{
+  return t.Field1
+}
+// 非公開メソッド
+func (t *T) method2() int {
+  return t.field2
+}
+~~~  
+
+~~~
+package main
+
+t := & foo.T{}
+t.Method1() // OK
+t.Field1 // OK
+t.method2() // コンパイルエラー
+t.field2 // コンパイルエラー
+~~~  
+構造体のフィールドを全て非公開にして公開されたメソッドから操作するようにすればメンテナンス性の高いパッケージを作ることができる。  
