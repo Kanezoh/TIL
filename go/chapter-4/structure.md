@@ -241,4 +241,39 @@ p.Y = 1
 ~~~  
 
 このようにポインタを使えば構造体の参照渡しが実現して元の構造体に変化を及ぼすことができる。  
-構造体は主にポインタ型を経由して使用するため、指定した型のポインタを生成する組み込み関数が既に用意されている。  
+構造体は主にポインタ型を経由して使用するため、指定した型のポインタを生成する組み込み関数が既に用意されている。 
+
+#### new
+~~~
+type Person struct {
+  Id int
+  Name string
+  Area string
+}
+
+p := new(Person)
+
+p.Id
+p.Name
+p.Area
+~~~  
+
+#### メソッド
+オブジェクト指向言語のメソッドとは異なって任意の型に特化した関数を定義するための仕組み。  
+~~~  
+type Point struct{X, Y int}
+func (p *Point) Render(){
+  fmt.Printf("<%d,%d>\n", p.X, p.Y)
+}
+p := &Point{X: 5, Y: 12}
+p.Render() // <5,12>
+~~~  
+
+メソッドを呼び出すにはレシーバーが必要になる。メソッドの定義にはレシーバーを指定する必要がある。  
+~~~  
+func (p *Point) Distance(dp *Point) float64 {
+  x, y := p.X - dp.X, p.Y - dp.Y
+  return math.Sqrt(float64(x*x + y*y))
+}
+~~~  
+
