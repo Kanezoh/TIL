@@ -146,3 +146,53 @@ t := T{
 fmt.Println(t) // => "{12 0 [A B C]}
 ~~~  
 無名フィールドは構造体のメモリ上のアラインメント調整のために使われる。普通のプログラムの範囲ではまず使わないのでひとまず覚える必要はない。
+
+### 構造体を含む構造体
+~~~
+type Feed struct {
+  Name string
+  Amount uint
+}
+
+type Animal struct {
+  Name string
+  Feed feed
+}
+~~~  
+
+入れ子になった構造体もまとめて初期化することができる。  
+~~~  
+a := Animal{
+  Name: "Monkey",
+  Feed: Feed{
+    Name: "Banana",
+    Amount: 10,
+  },
+}
+
+a.Name // == "Monkey"
+a.Feed.Name // == "Banana"
+a.Feed.Amount // == 10
+~~~  
+構造体のフィールド名を省略することもできる。その場合はa.Feed.Amountのような表記をa.Amountのように表記できる。  
+~~~  
+type Feed struct {
+  Name string
+  Amount uint
+}
+
+type Animal struct {
+  Name string
+  Feed
+}
+
+a := Animal{
+  Name: "Monkey",
+  Feed: Feed{
+    Name: "Banana",
+    Amount: 10,
+  }
+}
+a.Amount // ==10
+~~~  
+Feed型のNameフィールドにアクセスするときはa.Feed.Nameのような表記をしなければならない。フィールド名を省略できるのはあくまでもフィールド名が一意に定まる場合のみ。  
