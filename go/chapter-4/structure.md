@@ -277,3 +277,22 @@ func (p *Point) Distance(dp *Point) float64 {
 }
 ~~~  
 
+#### 型のコンストラクタ
+他の言語のコンストラクタのようなものはないが、パターンとして構造体を初期化するためのコンストラクタを定義するパターンがある。  
+~~~  
+type User struct {
+  Id int
+  Name string
+}
+
+func NewUser(id int, name string) *User {
+  u := new(User)
+  u.Id = id
+  u.Name = name
+  return u
+}
+fmt.Println(NewUser(1, "Taro")) // == "&{1 Taro}"
+~~~  
+パッケージの内部にのみ公開する場合はnewuserのように小文字にすると良い。
+
+
