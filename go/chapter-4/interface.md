@@ -42,3 +42,51 @@ err := RaiseError()
 err.Error() // == エラーが発生しました
 ~~~  
 
+### インターフェースのメリット
+
+「異なる型に共通の性質を付与することができること。」  
+~~~  
+type Stringify interface {
+  ToString() string
+}
+
+type Person struct {
+  Name string
+  Age int
+}
+
+func (p *Person) ToString() string {
+  return fmt.Sprintf("%s(%d)", p.Name, p.Age)
+}
+
+type Car struct {
+  Number string
+  Model string
+}
+
+func (c *Car) ToString() string {
+  return fmt.Sprintf("[%s]%s, c.Number, c.Model)
+}
+
+vs := []Stringify{
+  &Person{Name: "Taro", Age: 21},
+  &Car{Number: "XXX-0123", Model: "PX512"},
+}
+for _, v := range vs {
+  fmt.Println(v.ToString())
+}
+// 出力
+Taro(21)
+[XXX-0123] PX512
+~~~  
+
+また、インターフェースを使うことで汎用性の高い関数を定義することができる。  
+~~~  
+func Println(s Stringify) {
+  fmt.Println(s.ToString())
+}
+
+Println(&Person{Name: "Hanako", Age: 23}) // Hanako(23)
+Println(&Car{Number: "XYZ-9999", Model: "RT-38"})
+~~~  
+このように厳密なGoの型定義に柔軟さを持たせることができる。  
