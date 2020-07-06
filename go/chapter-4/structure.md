@@ -384,3 +384,21 @@ func (ps Points) ToString() string {
   return str
 }
 ~~~  
+
+### マップと構造体
+マップのキー、値に構造体を使うときは構造体型の型名を省略することができる。  
+~~~
+type User struct {
+  Id int
+  Name string
+}
+// キーが構造体型のmap
+m1 := map[User]string{
+  {Id: 1, Name: "Taro"}: "Tokyo",
+  {Id: 2, Name: "Jiro"}: "Osaka",
+}
+// 値が構造体型のmap
+m2 := map[int]User {
+  1: {Id: 1, Name: "Taro"},
+  2: {Id: 2, Name: "Jiro"},
+}
