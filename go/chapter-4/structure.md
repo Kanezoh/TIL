@@ -295,4 +295,24 @@ fmt.Println(NewUser(1, "Taro")) // == "&{1 Taro}"
 ~~~  
 パッケージの内部にのみ公開する場合はnewuserのように小文字にすると良い。
 
+### レシーバとポイント型
+**構造体に定義するメソッドのレシーバーは基本的にポインタ型にすべき。**  
 
+~~~  
+type Point struct{X, Y int}
+
+func (p Point) Set(x, y int) {
+  p.X = x
+  p.Y = y
+}
+
+p1 := Point{}
+p1.Set(1, 2)
+p1.X // == 0
+p1.Y // == 0
+
+p2 := &Point{}
+p2.Set(1,2)
+p2.x // == 1
+p2.y // == 2
+~~~  
