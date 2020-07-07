@@ -148,3 +148,23 @@ t.Method1() // == OK
 t.Method2() // コンパイルエラー
 ~~~  
 
+### インターフェースを含むインターフェース
+
+次の例ではインターフェースを入れ子で定義しているのでインターフェースI1が要求するメソッドはMethod1とMethod2の2つになる。  
+~~~  
+type I0 interface {
+  Method1() int
+}
+
+type I1 interface {
+  I0
+  Method2() int
+}
+
+type I3 interface {
+  I0
+  I1
+  Method3() int
+}
+~~~  
+メソッド名が重複するとエラーになるので注意が必要。  
