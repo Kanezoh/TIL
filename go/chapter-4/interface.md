@@ -168,3 +168,17 @@ type I3 interface {
 }
 ~~~  
 メソッド名が重複するとエラーになるので注意が必要。  
+
+### interface{}の本質
+
+interfaceも構造体と同じくエイリアスを定義せずにそのまま定義できる。  
+~~~  
+type T struct{ Id int }
+
+func (t *T) GetId() int { return t.Id }
+
+func ShowId(id interface {GetId() int}) {
+  fmt.Println(id.GetId())
+}
+~~~  
+
