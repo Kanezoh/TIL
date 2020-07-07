@@ -117,3 +117,34 @@ func (t *T) String() string {
 t := &T{Id: 10, Name: "Taro"}
 fmt.Println(t) // == "<< 10 Taro >>"
 ~~~  
+
+### インターフェースのメソッドの可視性
+構造体のフィールド、メソッドの命名と同じように大文字にすればパッケージの外部から参照できる。  
+インターフェースのメソッドを外部に隠蔽するメリットはないので基本的には大文字で定義すべき。  
+~~~  
+package foo
+
+type I interface {
+  Method1() string
+  method2() string
+}
+
+type T struct{}
+
+func (t *T) Method1() string {
+  return "Method1()"
+}
+
+func (t *T) Method2() string {
+  return "method2()"
+}
+~~~  
+
+~~~  
+package main
+
+t := foo.New()
+t.Method1() // == OK
+t.Method2() // コンパイルエラー
+~~~  
+
