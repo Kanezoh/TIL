@@ -90,3 +90,30 @@ Println(&Person{Name: "Hanako", Age: 23}) // Hanako(23)
 Println(&Car{Number: "XYZ-9999", Model: "RT-38"})
 ~~~  
 このように厳密なGoの型定義に柔軟さを持たせることができる。  
+
+### fmt.Stringer
+fmtパッケージのStringerはインターフェース。文字列を返すメソッドStringのみが定義されている。  
+~~~  
+type Stringer interface {
+  String() string
+}
+~~~
+T型のポインタを関数fmt.Printlnに渡すと文字列が出力される。  
+~~~
+type T struct {
+  Id int
+  Name string
+}
+
+t := &T{Id: 10, Name: "Taro"}
+fmt.Println(t) // == "&{10 Taro}"
+~~~  
+fmt.Stringerインターフェースを活用することで任意の型の文字列表現をカスタマイズできる。  
+
+~~~  
+func (t *T) String() string {
+  return fmt.Sprintf("<<%d, %s>>, t.Id, t.Name)
+}
+t := &T{Id: 10, Name: "Taro"}
+fmt.Println(t) // == "<< 10 Taro >>"
+~~~  
