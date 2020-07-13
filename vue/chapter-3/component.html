@@ -1,6 +1,9 @@
 <script src="https://unpkg.com/vue@2.5.17"></script>
 
 <ul id="example">
+  <!-- コンポーネントは複数回使用可能 -->
+  <list-item></list-item>
+  <list-item></list-item>
   <list-item></list-item>
 </ul>
 
@@ -12,4 +15,30 @@
     }
   })
   new Vue({el: '#example'})
+</script>
+
+<script>
+  // コンストラクタによる定義
+  var ListItem = Vue.extend({
+    template: '<li>foo {{ contents }}</li>',
+    data: function() {
+      return { contents: 'bar'}
+    }
+  })
+  new ListItem().$mount('#example')
+</script>
+
+<script>
+  // ローカルコンポーネントの定義
+  new Vue({
+    el: '#example',
+    components: {
+      'list-item': {
+        template: '<li>foo {{ contents }}</li>',
+        data: function() {
+          return { contents: 'bar'}
+        }
+      }
+    }
+  })
 </script>
