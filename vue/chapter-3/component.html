@@ -1,0 +1,15 @@
+<script src="https://unpkg.com/vue@2.5.17"></script>
+
+<ul id="example">
+  <list-item></list-item>
+</ul>
+
+<script>
+  Vue.component('list-item', {
+    template: '<li>foo {{ contents }}</li>',
+    data: function() {
+      return { contents: 'bar'}
+    }
+  })
+  new Vue({el: '#example'})
+</script>
