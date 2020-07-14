@@ -8,6 +8,10 @@
   <nav>
     <router-link to="/top">トップページ</router-link>
     <router-link to="/users">ユーザー一覧ページ</router-link>
+    <router-link to="/users/new?redirect=true">新規ユーザー登録</router-link>
+    <router-link to="/login">ログイン</router-link>
+    <router-link to="/logout">ログアウト</router-link>
+    
   </nav>
   <router-view></router-view>
 </div>
@@ -59,6 +63,19 @@
         <input type="button" @click="createUser" value="送信">
       </div>
     </div>
+  </div>
+</script>
+
+<script type="text/x-template" id="login">
+  <div>
+    <h1>Login</h1>
+    <p v-if="$route.query.redirect">ログインしてください</p>
+    <form @submit.prevent="login">
+      <label><input v-model="email" placeholder="email"></label>
+      <label><input v-model="pass" placeholder="password" type="password"></label><br>
+      <button type="submit">ログイン</button>
+      <p v-if="error" class="error">ログインに失敗しました</p>
+    </form>
   </div>
 </script>
 
@@ -235,7 +252,28 @@
       },
       {
         path: '/users/new',
-        component: UserCreate
+        component: UserCreate,
+        beforeEnter: function(to, from, next) {
+          if(!Auth.loggedIn()) {
+            next({
+              path: '/login',
+              query: { redirect: to.fullPath}
+            })
+          } else {
+            next()
+          }
+        }
+      },
+      {
+        path: '/login',
+        component: Login
+      },
+      {
+        path: '/logout',
+        beforeEnter: function(to, from, next) {
+          Auth.logout()
+          next('/')
+        }
       },
       {
         path: '/users/:userId',
@@ -243,6 +281,47 @@
       }
     ]
   })
+
+  var Auth = {
+    login: function(email, pass, cb) {
+      setTimeout(function() {
+        if (email === 'vue@example.com' && pass === 'vue') {
+          localStorage.token = Math.random().toString(36).substring(7)
+          if(cb) {cb(false)}
+        }
+      }, 0)
+    },
+
+    logout: function() {
+      delete localStorage.token
+    },
+
+    loggedIn: function() {
+      return !!localStorage.token
+    }
+  }
+
+  var Login = {
+    template: '#login',
+    data: function() {
+      return {
+        email: "vue@example.com",
+        pass: '',
+        error: false
+      }
+    },
+    methods: {
+      login: function() {
+        Auth.login(this.email, this.pass, (function(loggedIn){
+          if(!loggedIn){
+            this.error = true
+          } else {
+            this.$router.replace(this.$router.query.redirect || '/')
+          }
+        }).bind(this))
+      }
+    }
+  }
 
   var app = new Vue({
     router: router
