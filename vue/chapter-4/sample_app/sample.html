@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<title>Vue SPA</title>
+<style>
+
+</style>
+
+<div id="app">
+  <nav>
+    <router-link to="/top">トップページ</router-link>
+    <router-link to="/users">ユーザー一覧ページ</router-link>
+  </nav>
+  <router-view></router-view>
+</div>
+<script src="https://unpkg.com/vue@2.5.17"></script>
+<script src="https://unpkg.com/vue-router@3.0.1"></script>
+
+<script type="text/x-template" id="user-list">
+  <div>
+    <div class="loading" v-if="loading">読み込み中...</div>
+    <div v-id="error" class="error">
+      {{ error }}
+    </div>
+    <div v-for="user in users" :key="user.id">
+      <h2>{{ user.name }}</h2>
+    </div>
+  </div>
+</script>
+
+<script>
+  // JSONを返す関数
+  var getUsers = function(callback) {
+    setTimeout(function(){
+      callback(null, [
+        {
+          id: 1,
+          name: "AAA"
+        },
+        {
+          id: 2,
+          name: "BBB"
+        }
+      ])
+    }, 1000)
+  }
+
+  var UserList = {
+    // html上のscriptタグのIDを指定
+    template: '#user-list',
+    data: function() {
+      return {
+        loading: false,
+        users: function() { return [] }, // 初期値
+        error: null
+      }
+    },
+
+    created: function() {
+      this.fetchData()
+    },
+
+    // $routeの変更をwatchしてルーティング原稿じに再度データを取得
+    watch: {
+      '$route': 'fetchData'
+    },
+
+    methods: {
+      fetchData: function() {
+        this.loading = true,
+        // 取得したデータをusersに格納
+        // Function.prototype.bindはthisのスコープを渡すために利用
+        getUsers((function(err, users) {
+          this.loading = false
+          if (err) {
+            this.error = err.toString()
+          } else {
+            this.users = users
+          }
+        }).bind(this))
+      }
+    }
+  }
+
+  var router = new VueRouter({
+    routes: [
+      {
+        path: '/top',
+        component: {
+          template: '<div>トップページです。</div>'
+        }
+      },
+      {
+        path: '/users',
+        component: UserList
+      }
+    ]
+  })
+
+  var app = new Vue({
+    router: router
+  }).$mount('#app')
+</script>
