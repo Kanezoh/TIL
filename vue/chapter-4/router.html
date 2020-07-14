@@ -29,6 +29,15 @@
         path: '/users',
         component: {
           template: '<div>ユーザー一覧ページです</div>'
+        },
+        // 遷移前の処理を定義できるフック関数
+        beforeEnter: function(to, from, next) {
+          // users?redirect=true でアクセスされた場合のみtopに飛ばす処理
+          if (to.query.redirect == 'true') {
+            next('/top')
+          } else {
+            next()
+          }
         }
       },
       // パラメータ付きルート
