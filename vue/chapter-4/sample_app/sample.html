@@ -26,6 +26,18 @@
   </div>
 </script>
 
+<script type="text/x-template" id="user-detail">
+  <div>
+    <div class="loading" v-if="loading">読み込み中...</div>
+    <div v-id="error" class="error">
+      {{ error }}
+    </div>
+    <div v-if="user">
+      <h2>{{ user.name }}</h2>
+      <p>{{ user.description }}</p>
+    </div>
+</script>
+
 <script>
   // JSONを返す関数
   var getUsers = function(callback) {
@@ -80,6 +92,60 @@
     }
   }
 
+  var userData = [
+    {
+      id: 1,
+      name: "AAA",
+      description: "AAAの説明〜"
+    },
+    {
+      id: 2,
+      name: "BBB",
+      description: "BBBの説明〜"
+    }
+  ]
+
+  var getUser = function(userId, callback) {
+    setTimeout(function() {
+      var filteredUsers = userData.filter(function(user){
+        return user.id === parseInt(userId, 10)
+      })
+      callback(null, filteredUsers && filteredUsers[0])
+    }, 1000)
+  }
+
+  var UserDetail = {
+    template: '#user-detail',
+    // 初期値のセット
+    data: function() {
+      return {
+        loading: false,
+        user: null,
+        error: null
+      }
+    },
+    created: function() {
+      this.fetchData()
+    },
+    watch: {
+      '$route': 'fetchData'
+    },
+    methods: {
+      fetchData: function() {
+        this.loading = true
+        // this.$route.params.userIdに現在のURLのパラメータに対応したuserIdが格納される
+        getUser(this.$route.params.userId, (function (err, user) {
+          this.loading = false
+          if (err) {
+            this.error = err.toString()
+          } else {
+            this.user = user
+          }
+        }).bind(this))
+      }
+    }
+  }
+
   var router = new VueRouter({
     routes: [
       {
@@ -91,6 +157,10 @@
       {
         path: '/users',
         component: UserList
+      },
+      {
+        path: '/users/:userId',
+        component: UserDetail
       }
     ]
   })
