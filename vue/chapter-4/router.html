@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Vue SPA</title>
+  </head>
+  <body>
+    <div id="app">
+      <router-link to="/top">トップページ</router-link>
+      <router-link to="/users">ユーザー一覧ページ</router-link>
+      <router-link :to="{name: 'user', params: {userId: 123}}">ユーザー詳細ページ</router-link>
+      <router-view></router-view>
+    </div>
+  </body>
+</html>
+<script src="https://unpkg.com/vue@2.5.17"></script>
+<script src="https://unpkg.com/vue-router@3.0.1"></script>
+<script>
+  // 各ルートにコンポーネントをマッピングする
+  var router = new VueRouter({
+    routes: [
+      {
+        path: '/top',
+        component: {
+          template: '<div>トップページです</top>'
+        }
+      },
+      {
+        path: '/users',
+        component: {
+          template: '<div>ユーザー一覧ページです</div>'
+        }
+      },
+      // パラメータ付きルート
+      {
+        path: '/user/:userId',
+        // html側のリンクで使える別名を定義できる
+        name: 'user',
+        component: {
+          // パラメータは$route.params.userIdのように取得できる。
+          template: '<div>ユーザーIDは {{ $route.params.userId }} です。</div>'
+        }
+      }
+    ]
+  })
+  // ルーターのインスタンスをrootとなるVueインスタンスに渡す
+  var app = new Vue({
+    router: router
+  }).$mount('#app')
+</script>
