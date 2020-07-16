@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<title>Vue App</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://unpkg.com/vue@2.5.17"></script>
+
+<div id="app">
+  <button @click="isShown = !isShown">表示の切り替え</button>
+  <transition>
+    <p v-show="isShown">Hello, World!</p>
+  </transition>
+</div>
+<script>
+  new Vue({
+    el: '#app',
+    data: function() {
+      return {
+        isShown: false
+      }
+    }
+  })
+</script>
