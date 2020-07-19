@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<title>Vue App</title>
+<script src="https://unpkg.com/vue@2.5.17"></script>
+
+<div id="app">
+  <my-button>送信する</my-button>
+  <my-button></my-button>
+</div>
+
+<script>
+  var MyButton = {
+    template: `
+      <button>
+        <slot>OK</slot>
+      </button>
+    `
+  }
+
+  new Vue({
+    el: '#app',
+    components: {
+      MyButton: MyButton
+    }
+  })
+</script>
