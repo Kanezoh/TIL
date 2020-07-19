@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<title>Vue App</title>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
+<script src="https://unpkg.com/vue@2.5.17"></script>
+
+<div id="app">
+  <icon-share-button></icon-share-button>
+  <text-share-button></text-share-button>
+</div>
+
+<script>
+  // ミックスインの定義
+  var Sharable = {
+    data: function() {
+      return {
+        _isProcessing: false
+      }
+    },
+    methods: {
+      share: function() {
+        if(this._isProcessing) {
+          return
+        }
+        if(!window.confirm('シェアしますか?')){
+          return
+        }
+        this._isProcessing = true
+        // ここでSDKのコンポーネントを呼ぶ
+        setTimeout(() => {
+          window.alert('シェアしました')
+          this._isProcessing = false
+        }, 300)
+      }
+    }
+  }
+
+  var IconShareButton = {
+    mixins: [Sharable],
+    template: `
+      <button @click="share"><i class="fas fa-share-square"></i></button>
+    `
+  }
+
+  var TextShareButton = {
+    mixins: [Sharable],
+    template: `
+      <button @click="share">{{ buttonLabel }}</button>
+    `,
+    data: function() {
+      return {
+        buttonLabel: 'シェアする'
+      }
+    }
+  }
+
+  new Vue({
+    el: '#app',
+    components: {
+      IconShareButton,
+      TextShareButton
+    }
+  })
+</script>
