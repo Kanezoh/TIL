@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<title>Vue App</title>
+<script src="https://unpkg.com/vue@2.5.17"></script>
+
+<div id="app">
+  <login-required-page></login-required-page>
+</div>
+
+<script>
+  Vue.mixin({
+    data: function() {
+      return {
+        loggedInUser: null
+      }
+    },
+    created: function() {
+      var auth = this.$options.auth
+      this.loggedInUser = JSON.parse(sessionStorage.getItem('loggedInUser'))
+      if(auth && !this.loggedInUser) {
+        window.alert('このページにはログインが必要です')
+      }
+    }
+  })
+
+  var LoginRequiredPage = {
+    auth: true,
+    template: `
+    <div>
+      <p v-if="!loggedInUser">
+        このページにはログインが必要です
+      </p>
+      <p v-else>
+        {{ loggedInUser }}さんでログインしています
+      </p>
+    </div>
+    `
+  }
+
+  new Vue({
+    el: '#app',
+    components: {
+      LoginRequiredPage
+    }
+  })
+</script>
