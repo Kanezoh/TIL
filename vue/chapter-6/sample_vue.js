@@ -7,6 +7,10 @@ const store = new Vuex.Store({
   state: {
     count: 0
   },
+  getters: {
+    squared: (state) => state.count * state.count,
+    cubed: (state, getters) => state.count * getters.squared
+  },
   mutations: {
     increment(state, amount) {
       state.count += amount
