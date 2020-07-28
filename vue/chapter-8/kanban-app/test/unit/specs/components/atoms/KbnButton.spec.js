@@ -44,7 +44,7 @@ describe('KbnButton', () => {
           const button = mount(KbnButton, {
             propsData: { disabled: true }
           })
-          expect(button.attributes().disabled).to.be.an('disabled')
+          expect(button.attributes().disabled).to.equal('disabled')
         })
       })
       describe('false', () => {
