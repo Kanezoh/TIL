@@ -1,1 +1,3 @@
-<template>\n <p>ログインページ</p>\n</template>
+<template>
+  <p>ログインページ</p>
+</template>

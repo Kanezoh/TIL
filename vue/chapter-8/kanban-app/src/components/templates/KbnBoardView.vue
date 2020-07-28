@@ -1,1 +1,3 @@
-<template>\n <p>ボードページ</p>\n</template>
+<template>
+  <p>ボードページ</p>
+</template>
