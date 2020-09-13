@@ -19,6 +19,10 @@ module Main where
   
   finiteCycle (first:rest) = first:rest ++ [first]
   myCycle (first:rest) = (first:rest)++myCycle (first:rest)
+
+  ackermann 0 n = n + 1
+  ackermann m 0 = ackermann (m - 1) 1
+  ackermann m n = ackermann (m-1) (ackermann m (n-1))
   
 
   main = do 
