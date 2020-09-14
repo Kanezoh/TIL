@@ -36,6 +36,13 @@ module Main where
   isPalindrome word = processedText == reverse processedText
     where noSpaces = filter (/= ' ') word
           processedText = map toLower noSpaces
+  
+  -- 調和級数
+  harmonic n = sum (take n seriesValues)
+    where seriesPairs = zip (cycle [1.0]) [1.0, 2.0 .. ]
+          seriesValues = map
+                          (\pair -> (fst pair) / (snd pair))
+                          seriesPairs
   main = do
     -- map関数、リストの各要素に対して渡された関数を実行
     print(map reverse ["dog", "cat", "moose"])
