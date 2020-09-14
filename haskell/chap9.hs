@@ -27,6 +27,9 @@ module Main where
   -- foldlでリストの順序を逆にする
   rcons x y = y:x
   myReverse xs = foldl rcons [] xs
+
+  -- elem関数の再実装
+  myElem n xs = length (filter (\x -> x == n) xs) > 0
   main = do
     -- map関数、リストの各要素に対して渡された関数を実行
     print(map reverse ["dog", "cat", "moose"])
