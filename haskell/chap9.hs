@@ -20,9 +20,18 @@ module Main where
   remove f (x:xs) = if f x
                     then remove f xs
                     else x:remove f xs
+  -- 畳み込み、総乗
+  myProduct aList = foldl(*) 1 aList
+  -- foldlとmapの組み合わせ
+  sumOfSquare xs = foldl (+) 0 (map (^2) xs)
+  -- foldlでリストの順序を逆にする
+  rcons x y = y:x
+  myReverse xs = foldl rcons [] xs
   main = do
     -- map関数、リストの各要素に対して渡された関数を実行
     print(map reverse ["dog", "cat", "moose"])
     -- filter関数、Trueになった要素だけを残す関数
     print(filter even [1,2,3,4,5])
     print(filter (\(x:xs) -> x == 'a')["apple", "banana", "avocado"])
+    -- foldl関数、渡された引数を単一の値に畳み込む、引数: 二項関数、初期値、リスト
+    print(foldl (+) 0 [1,2,3,4,5])
