@@ -1,6 +1,7 @@
 module Main where
   import Lib
   import Data.List
+  import Data.Char
 
   main::IO()
   -- リストの全ての要素にaを付け加える再帰関数
@@ -30,6 +31,11 @@ module Main where
 
   -- elem関数の再実装
   myElem n xs = length (filter (\x -> x == n) xs) > 0
+
+  -- 回文判定
+  isPalindrome word = processedText == reverse processedText
+    where noSpaces = filter (/= ' ') word
+          processedText = map toLower noSpaces
   main = do
     -- map関数、リストの各要素に対して渡された関数を実行
     print(map reverse ["dog", "cat", "moose"])
