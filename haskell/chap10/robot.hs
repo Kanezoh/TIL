@@ -12,5 +12,13 @@ module Main where
   getName aRobot = aRobot name
   getAttack aRobot = aRobot attack
   getHp aRobot = aRobot hp
+  -- セッター
+  setName aRobot newName = aRobot (\(n, a, h) -> robot (newName, a, h))
+  setAttack aRobot newAttack = aRobot (\(n, a, h) -> robot (n, newAttack, h))
+  setHp aRobot newHp = aRobot (\(n, a, h) -> robot (n, a, newHp))
+  -- robotのステータスを表示
+  printRobot aRobot = aRobot (\(n, a, h) -> n ++
+                                            " attack:" ++ (show a) ++
+                                            " hp:" ++ (show h))
 
   main = do print "aaa"
