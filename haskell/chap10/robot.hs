@@ -20,5 +20,13 @@ module Main where
   printRobot aRobot = aRobot (\(n, a, h) -> n ++
                                             " attack:" ++ (show a) ++
                                             " hp:" ++ (show h))
+  -- damage
+  damage aRobot attackDamage = aRobot (\(n, a, h) ->
+                                      robot (n, a, h - attackDamage))
+  -- 戦闘用関数
+  fight aRobot defender = damage defender attack
+    where attack = if getHp aRobot > 10
+                   then getAttack aRobot
+                   else 0
 
   main = do print "aaa"
