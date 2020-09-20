@@ -16,6 +16,11 @@ module Main where
   ifEven f n = if even n
                then f n
                else n
+  
+  -- 型変数
+  -- 型を特に指定しない場合は変数を置くことで勝手に置き換わる
+  simple :: a -> a
+  simple x = x
   main = do
   -- show 数字→文字列
   print (show 6) -- => "6"
