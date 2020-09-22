@@ -53,5 +53,24 @@ class Eq a where
 Ordは何かに順番があることを示すためのクラスなので、当然それらが等しいかどうかの表現もできなければならない。
 しかし、等しいことを表すためのEqクラスは順番を表現する必要はないため逆の場合は成り立たない。
 
+### Bounded
+似たような数字型のIntとIntegerだが、infoで型クラスを確認すると一つだけ違いが見つかる。  
+IntはBounded型クラスのインスタンスだが、Integerはそうではない。  
 
+**Bounded型クラスの定義(値は要求するが関数は要求しない)**
+~~~  
+class Bounded a where
+  minBound :: a
+  maxBound :: a
+~~~  
 
+~~~  
+minBound :: Int
+=> -9223372036854775808
+maxBound :: Int
+=> 9223372036854775807
+minBound :: Char
+=> '\NUL'
+maxBound :: Char
+=> '\1114111'
+~~~  
