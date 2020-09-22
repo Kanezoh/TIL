@@ -74,3 +74,43 @@ minBound :: Char
 maxBound :: Char
 => '\1114111'
 ~~~  
+
+### Show
+showとread関数を可能にしている便利な型クラス。  
+~~~  
+class Show a where
+  show :: a -> String
+~~~  
+ghciで値が表示できる = showを実装しているということ。
+Showを実装せずに独自の型を作ってもghciで表示はできない。  
+~~~  
+data IceCream = Chocolate | Vanilla
+~~~  
+
+~~~  
+True
+=> True
+False
+=> False
+Chocolate
+=> エラー、表示できない
+~~~  
+
+### 型クラスの派生クラス
+型定義の後に派生させたい型クラスを書くとそれらの派生クラスとして定義できる。  
+
+~~~  
+data IceCream = Chocolate | Vanilla deriving (Show, Eq, Ord)
+~~~
+
+~~~  
+Chocolate
+=> Chocolate
+Vanilla == Vanilla
+=> True
+
+-- Vanillaの方が後に定義したので大きいと評価される
+Vanilla > Chocolate
+=> True
+~~~  
+
