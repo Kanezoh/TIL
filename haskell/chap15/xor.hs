@@ -9,6 +9,7 @@ xor list1 list2 = map xorPair (zip list1 list2)
 
 type Bits = [Bool]
 
+-- 数字をBitsに変換する関数
 intToBits' :: Int -> Bits
 intToBits' 0 = [False]
 intToBits' 1 = [True]
@@ -26,3 +27,19 @@ intToBits n = leadingFalses ++ reversedBits
   where reversedBits = reverse (intToBits' n)
         missingBits = maxBits - length reversedBits
         leadingFalses = take missingBits (cycle [False])
+
+-- CharをBitsに変換する関数
+charToBits :: Char -> Bits
+charToBits char = intToBits (fromEnum char)
+
+-- BitsをIntに戻す関数
+bitsToInt :: Bits -> Int
+bitsToInt bits = sum (map (\x -> 2^snd x ) trueLocations)
+  where size = length bits
+        indices = [size-1, size-2 .. 0]
+        trueLocations = filter (\x -> fst x == True)
+                        (zip bits indices)
+
+-- BitsをCharに戻す関数
+bitsToChar :: Bits -> Char
+bitsToChar bits = toEnum (bitsToInt bits)
