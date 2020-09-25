@@ -7,3 +7,12 @@ instance Show SixSidedDie where
   show S4 = "four"
   show S5 = "five"
   show S6 = "six"
+
+instance Eq SixSidedDie where
+  (==) S6 S6 = True
+  (==) S5 S5 = True
+  (==) S4 S4 = True
+  (==) S3 S3 = True
+  (==) S2 S2 = True
+  (==) S1 S1 = True
+  (==) _ _   = False
