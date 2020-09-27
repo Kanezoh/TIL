@@ -81,7 +81,7 @@ price (PamphletItem Pamphlet) = 0
 
 madeby :: StoreItem -> String
 madeby (BookItem book) = show (author book)
-madeby (recordItem record) = show (artist record)
+madeby (RecordItem record) = show (artist record)
 
 -- 図形
 type Radius = Double
