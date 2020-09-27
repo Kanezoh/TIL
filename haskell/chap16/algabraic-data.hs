@@ -82,3 +82,19 @@ price (PamphletItem Pamphlet) = 0
 madeby :: StoreItem -> String
 madeby (BookItem book) = show (author book)
 madeby (recordItem record) = show (artist record)
+
+-- 図形
+type Radius = Double
+type Height = Double
+type Width  = Double
+
+data Shape = Circle Radius | Square Height Width | Rectangle Height Width deriving Show
+perimeter :: Shape -> Double
+perimeter (Circle r) = 2 * pi * r
+perimeter (Square h) = 4 * h
+perimeter (Rectangle h w) = 2 * h + 2 * w 
+
+area :: Shape -> Double
+area (Circle r) = r^2 * pi
+area (Square h) = h^2
+area (Rectangle h w) = h * w
