@@ -39,4 +39,31 @@ instance Semigroup Color where
            | all (`elem` [Red, Yellow, Orange]) [a,b] = Orange
            | otherwise = Brown
 
+-- Monoid 単位元を要求するセミグループ
+-- クラス定義
+-- class Monoid a where
+--   mempty :: a          単位元
+--   mappend :: a -> a    <>の定義と全く同じ
+--   mconcat :: [a] -> a
 
+-- mconcat Monoidのリストを受け取ってそれらを一つのMonoidにする
+-- mempty, mappendの定義は必須
+-- mconcat ["does", "this", "make", "sense"]
+
+-- Monoidを使った確率テーブル
+type Events = [String]
+type Probs  = [Double]
+
+data PTable = PTable Events Probs
+
+createPTable :: Events -> Probs -> PTable
+createPTable events probs = PTable events normalizedProbs
+  where totalProbs = sum probs
+        normalizedProbs = map (\x -> x / totalProbs) probs
+
+showPair :: String -> Double -> String
+showPair event prob = mconcat [event, "|" , show prob, "\n"]
+
+instance Show PTable where
+  show (PTable events probs) = mconcat pairs
+    where pairs = zipWith showPair events probs
