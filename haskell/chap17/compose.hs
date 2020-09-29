@@ -67,3 +67,23 @@ showPair event prob = mconcat [event, "|" , show prob, "\n"]
 instance Show PTable where
   show (PTable events probs) = mconcat pairs
     where pairs = zipWith showPair events probs
+
+-- 2つのリストの直積を求める
+cartCombine :: (a -> b -> c) -> [a] -> [b] -> [c]
+cartCombine func l1 l2 = zipWith func newL1 cycledL2
+  -- l2の要素ごとにl1の要素を繰り返す必要がある
+  where nToAdd = length l2
+        -- l1を写像して要素のコピーをnToAdd個作成
+        repeatedL1 = map (take nToAdd . repeat) l1
+        -- 前行で得られたリストのリストを結合
+        newL1 = mconcat repeatedL1
+        -- l2を無限リストにし、zipWithを使って2つのリストを結合
+        cycledL2 = cycle L2
+
+combineEvents :: Events -> Events -> Events
+combineEvents e1 e2 = cartCombine combiner e1 e2
+  where combiner = (\x y -> mconcat( [x, "-", y]))
+
+combinerProbs :: Probs -> Probs -> Probs
+combinerProbs p1 p2 = cartCombine (*) p1 p2
+
