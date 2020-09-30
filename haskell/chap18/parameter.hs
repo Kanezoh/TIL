@@ -66,4 +66,15 @@ ourMap :: (a -> b) -> List a -> List b
 ourMap _ Empty = Empty
 ourMap func (Cons a rest) = Cons (func a) (ourMap func rest)
 
+-- 複数の引数を取る型
+-- タプルの型定義
+-- data (,) a b = (,) a b
+item1 :: (String, Int)
+item1 = ("Eraser", 25)
+item2 :: (String, Int)
+item2 = ("Pencils", 25)
+item3 :: (String, Int)
+item3 = ("Pens", 13)
 
+itemInventory :: [(String, Int)]
+itemInventory = [item1, item2, item3]
