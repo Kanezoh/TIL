@@ -24,9 +24,11 @@ instance Semigroup Integer where
   (<>) x y = x + y
 
 -- 色を組み合わせるセミグループ
-data Color = Red | Yellow | Blue | Green | Purple | Orange | Brown deriving (Show, Eq)
+data Color = Red | Yellow | Blue | Green | Purple | Orange | Brown | Clear deriving (Show, Eq)
 
 instance Semigroup Color where
+  (<>) Clear any = any
+  (<>) any Clear = any
   (<>) Red Blue = Purple
   (<>) Blue Red = Purple
   (<>) Yellow Blue = Green
@@ -38,6 +40,9 @@ instance Semigroup Color where
            | all (`elem` [Blue, Yellow, Green]) [a,b] = Green
            | all (`elem` [Red, Yellow, Orange]) [a,b] = Orange
            | otherwise = Brown
+instance Monoid Color where
+  mempty = Clear
+  mappend col1 col2 = col1 <> col2
 
 -- Monoid 単位元を要求するセミグループ
 -- クラス定義
@@ -51,8 +56,8 @@ instance Semigroup Color where
 -- mconcat ["does", "this", "make", "sense"]
 
 -- Monoidを使った確率テーブル
-type Events = [String]
-type Probs  = [Double]
+data Events = Events [String]
+data Probs  = Probs [Double]
 
 data PTable = PTable Events Probs
 
@@ -81,11 +86,23 @@ cartCombine func l1 l2 = zipWith func newL1 cycledL2
         cycledL2 = cycle l2
 
 combineEvents :: Events -> Events -> Events
-combineEvents e1 e2 = cartCombine combiner e1 e2
+combineEvents (Events e1) (Events e2) = Events (cartCombine combiner e1 e2)
   where combiner = (\x y -> mconcat( [x, "-", y]))
 
+instance Semigroup Events where
+  (<>) = combineEvents
+instance Monoid Events where
+  mappend = (<>)
+  mempty = Events []
+
 combineProbs :: Probs -> Probs -> Probs
-combineProbs p1 p2 = cartCombine (*) p1 p2
+combineProbs (Probs p1) (Probs p2) = Probs(cartCombine (*) p1 p2)
+
+instance Semigroup Probs where
+  (<>) = combineProbs
+instance Monoid Probs where
+  mappend = (<>)
+  mempty = Probs []
 
 instance Semigroup PTable where
   (<>) ptable1 (PTable [] []) = ptable1 -- 空の場合
