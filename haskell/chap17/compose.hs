@@ -78,12 +78,28 @@ cartCombine func l1 l2 = zipWith func newL1 cycledL2
         -- 前行で得られたリストのリストを結合
         newL1 = mconcat repeatedL1
         -- l2を無限リストにし、zipWithを使って2つのリストを結合
-        cycledL2 = cycle L2
+        cycledL2 = cycle l2
 
 combineEvents :: Events -> Events -> Events
 combineEvents e1 e2 = cartCombine combiner e1 e2
   where combiner = (\x y -> mconcat( [x, "-", y]))
 
-combinerProbs :: Probs -> Probs -> Probs
-combinerProbs p1 p2 = cartCombine (*) p1 p2
+combineProbs :: Probs -> Probs -> Probs
+combineProbs p1 p2 = cartCombine (*) p1 p2
 
+instance Semigroup PTable where
+  (<>) ptable1 (PTable [] []) = ptable1 -- 空の場合
+  (<>) (PTable [] []) ptable2 = ptable2
+  (<>) (PTable e1 p1) (PTable e2 p2) = createPTable newEvents newProbs
+    where newEvents = combineEvents e1 e2
+          newProbs  = combineProbs p1 p2
+
+instance Monoid PTable where
+  mempty = PTable [] []
+  mappend = (<>)
+
+coin :: PTable
+coin = createPTable ["head", "tails"] [0.5, 0.5]
+
+spinner :: PTable
+spinner = createPTable ["red", "blue", "green"] [0.1, 0.2, 0.7]
