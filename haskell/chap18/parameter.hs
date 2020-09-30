@@ -78,3 +78,11 @@ item3 = ("Pens", 13)
 
 itemInventory :: [(String, Int)]
 itemInventory = [item1, item2, item3]
+
+-- カインド: 型の型
+-- 型が取るパラメータの数を指す、調べるには:kindを使用
+-- 引数の数はアスタリスクで表される、一つの場合は * -> *
+-- :kind Triple
+-- Triple :: * -> *
+-- :kind Int
+-- Int :: *
