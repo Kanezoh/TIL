@@ -47,3 +47,23 @@ toList (Triple x y z) = [x, y, z]
 -- Tripleを変換する関数
 transform :: (a -> a) -> Triple a -> Triple a
 transform f (Triple x y z) = Triple (f x) (f y) (f z)
+
+-- Listもパラメータ化された型の一種
+-- 組み込みListの定義
+-- data [] a = [] | a:[a]
+-- Listの独自実装
+-- 「List型は空か型aの別のリストと値aのコンシングである」の意味
+data List a = Empty | Cons a (List a) deriving Show
+
+builtinEx1 :: [Int]
+builtinEx1 = 1:2:3:[]
+
+ourListEx1 :: List Int
+ourListEx1 = Cons 1 (Cons 2 (Cons 3 Empty))
+
+-- 独自のmapを定義
+ourMap :: (a -> b) -> List a -> List b
+ourMap _ Empty = Empty
+ourMap func (Cons a rest) = Cons (func a) (ourMap func rest)
+
+
