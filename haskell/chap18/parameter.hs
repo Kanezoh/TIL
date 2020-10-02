@@ -93,7 +93,7 @@ itemInventory = [item1, item2, item3]
 -- import qualified Data.Map as Map
 
 -- パーツ
-data Organ = Heart | Brain | Kidney | Spleen deriving (Show, Eq)
+data Organ = Heart | Brain | Kidney | Spleen deriving (Show, Eq, Ord)
 organs :: [Organ]
 organs = [Heart, Heart, Brain, Spleen, Spleen, Kidney]
 -- ID
@@ -108,6 +108,11 @@ organPairs = zip ids organs
 
 organCatalog :: Map.Map Int Organ
 organCatalog = Map.fromList organPairs
+
+-- 在庫
+stocks = [2, 1, 3, 4, 6, 8]
+organInventory :: Map.Map Organ Int
+organInventory = Map.fromList (zip organs stocks)
 
 -- 検索するためのlookup関数
 -- Map.lookup 7 organCatalog
