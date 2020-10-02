@@ -36,6 +36,9 @@ availableOrgans = getDrawersContent possibleDrawers organCatalog
 countOrgan :: Organ -> [Maybe Organ] -> Int
 countOrgan organ available = length (filter (\x -> x == Just organ) available)
 
+emptyDrawers :: [Maybe Organ] -> Int
+emptyDrawers organs = length (filter (\x -> x == Nothing) organs) 
+
 -- Nothingかどうかを判定する関数
 isSomething :: Maybe Organ -> Bool
 isSomething Nothing = False
