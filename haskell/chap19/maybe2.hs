@@ -36,3 +36,8 @@ processRequest id catalog = processAndReport organ
 processAndReport :: Maybe Organ -> String
 processAndReport (Just organ) = report (process organ)
 processAndReport Nothing = "error, id not found"
+
+maybeMap :: (a -> b) -> Maybe a -> Maybe b
+maybeMap f Nothing = Nothing
+maybeMap f (Just val) = Just (f val)
+ 
