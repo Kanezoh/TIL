@@ -1,5 +1,6 @@
 -- 18章のコード
 import qualified Data.Map as Map
+import Data.List
 
 data Organ = Heart | Brain | Kidney | Spleen deriving (Show, Eq, Ord)
 organs :: [Organ]
@@ -34,3 +35,32 @@ availableOrgans = getDrawersContent possibleDrawers organCatalog
 
 countOrgan :: Organ -> [Maybe Organ] -> Int
 countOrgan organ available = length (filter (\x -> x == Just organ) available)
+
+-- Nothingかどうかを判定する関数
+isSomething :: Maybe Organ -> Bool
+isSomething Nothing = False
+isSomething _ = True
+
+-- Nothingを除いたOrgans
+justTheOrgans :: [Maybe Organ]
+justTheOrgans = filter isSomething availableOrgans
+
+-- Justも除きたい
+showOrgan :: Maybe Organ -> String
+showOrgan (Just organ) = show organ
+showOrgan Nothing = ""
+
+-- showOrganをmapで使用
+organList :: [String]
+organList = map showOrgan justTheOrgans 
+
+-- 見た目をよくするためにカンマを挿入
+-- intercalate関数のためにData.Listをインポート
+
+cleanList :: String
+cleanList = intercalate ", " organList
+
+-- 練習問題 numOrZero関数を作成
+numOrZero :: Maybe Int -> Int
+numOrZero (Just int) = int
+numOrZero _ = 0
