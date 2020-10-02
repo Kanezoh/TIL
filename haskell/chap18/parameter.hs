@@ -111,3 +111,10 @@ organCatalog = Map.fromList organPairs
 
 -- 検索するためのlookup関数
 -- Map.lookup 7 organCatalog
+
+-- Box, Tripleのmap関数
+boxMap :: (Box a -> Box b) -> [Box a] -> [Box b]
+boxMap f boxes = map f boxes
+
+tripleMap :: (Triple a -> Triple b) -> [Triple a] -> [Triple b]
+tripleMap f triple = map f triple
