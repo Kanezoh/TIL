@@ -1,3 +1,4 @@
+import qualified Data.Map as Map
 -- 引数を取る型
 -- 他の型を引数にとって保持できるコンテナのような型を定義できる
 data Box a = Box a deriving Show
@@ -86,3 +87,27 @@ itemInventory = [item1, item2, item3]
 -- Triple :: * -> *
 -- :kind Int
 -- Int :: *
+
+-- Data.Map
+-- 他の言語におけるハッシュのようなデータ構造
+-- import qualified Data.Map as Map
+
+-- パーツ
+data Organ = Heart | Brain | Kidney | Spleen deriving (Show, Eq)
+organs :: [Organ]
+organs = [Heart, Heart, Brain, Spleen, Spleen, Kidney]
+-- ID
+ids :: [Int]
+ids = [2, 7, 13, 14, 21, 24]
+
+-- fromList関数
+-- fromList :: Ord k => [(k, a)] -> Map k a
+-- Mapの検索は二部探索で行われるため、keyはOrdのインスタンスでなければならない
+organPairs :: [(Int, Organ)]
+organPairs = zip ids organs
+
+organCatalog :: Map.Map Int Organ
+organCatalog = Map.fromList organPairs
+
+-- 検索するためのlookup関数
+-- Map.lookup 7 organCatalog
