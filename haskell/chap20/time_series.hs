@@ -57,3 +57,22 @@ ts3 :: TS Double
 ts3 = fileToTS file3
 ts4 :: TS Double
 ts4 = fileToTS file4
+
+-- Mapとタプルを引数に取ってNothingでなければ挿入する
+insertMaybePair :: Ord k => Map.Map k v -> (k, Maybe v) -> Map.Map k v
+insertMaybePair myMap (_, Nothing) = myMap
+insertMaybePair myMap (key, (Just value)) = Map.insert key value myMap
+
+-- 2つのTSを結合
+combineTS :: TS a -> TS a -> TS a
+combineTS (TS [] []) ts2 = ts2
+combineTS ts1 (TS [] []) = ts1
+combineTS (TS t1 v1) (TS t2 v2) = TS completeTimes combineValues
+  where bothTimes = mconcat [t1, t2]
+        completeTimes = [(minimum t1) .. (maximum t2)]
+        tvMap = foldl insertMaybePair Map.empty (zip t1 v1)
+        updateMap = foldl insertMaybePair tvMap (zip t2 v2)
+        combineValues = map (\v -> Map.lookup v updateMap) completeTimes
+
+instance Semigroup (TS a) where
+  (<>) = combineTS
