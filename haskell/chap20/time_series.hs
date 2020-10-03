@@ -136,3 +136,27 @@ diffTS (TS [] []) = TS [] []
 diffTS (TS times values) = TS times (Nothing:diffValues)
   where shiftValues = tail values
         diffValues = zipWith diffPair shiftValues values
+
+-- Maybe a値のリストの平均値を求める
+meanMaybe :: (Real a) => [Maybe a] -> Maybe Double
+meanMaybe vals = if any (== Nothing) vals
+                 then Nothing
+                 else (Just avg)
+  where avg = mean (map fromJust vals)
+
+-- [Maybe a]リストの移動平均を計算する
+movingAvg :: (Real a) => [Maybe a] -> Int -> [Maybe Double]
+movingAvg [] n = []
+movingAvg vals n = if length nextVals == n
+                   then (meanMaybe nextVals):(movingAvg restVals n)
+                   else []
+  where nextVals = take n vals
+        restVals = tail vals
+
+-- TSの移動平均を求めて中心化する
+maTS :: (Real a) => TS a -> Int -> TS Double
+maTS (TS [] []) n = TS [] []
+maTS (TS times values) n = TS times smoothedValues
+  where ma = movingAvg values n
+        nothings = take (n `div` 2) (repeat Nothing)
+        smoothedValues = mconcat  [nothings, ma, nothings]
