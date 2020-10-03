@@ -123,3 +123,16 @@ compareTS func (TS times values) = if all (== Nothing) values
                                    else Just best
   where pairs = zip times values
         best  = foldl (makeTSCompare func) (0, Nothing) pairs
+
+-- Maybe型の減算を行う
+diffPair :: Num a => Maybe a -> Maybe a -> Maybe a
+diffPair _ Nothing = Nothing
+diffPair Nothing _ = Nothing
+diffPair (Just x) (Just y) = Just (x - y)
+
+-- TS型の減算を行う、一つ前との差分を求める
+diffTS :: Num  a => TS a -> TS a
+diffTS (TS [] []) = TS [] []
+diffTS (TS times values) = TS times (Nothing:diffValues)
+  where shiftValues = tail values
+        diffValues = zipWith diffPair shiftValues values
