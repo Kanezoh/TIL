@@ -1,4 +1,5 @@
 import System.Environment
+import System.IO
 
 getCounts :: String -> (Int, Int, Int)
 getCounts input = (charCount, wordCount, lineCount)
@@ -17,7 +18,11 @@ main :: IO()
 main = do
   args <- getArgs
   let fileName = head args
-  input <- readFile fileName
+  file <- openFile fileName ReadMode
+  input <- hGetContents file
   let summary = (countsText . getCounts) input
+  -- hGetContentsは遅延評価のため、出力をして評価させる
+  putStrLn summary
   appendFile "stats.dat" (mconcat [fileName, " ", summary, "\n"])
+  hClose file
   putStrLn summary
