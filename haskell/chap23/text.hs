@@ -69,3 +69,7 @@ combinedTextMonoid = mconcat ["some", " ", "text"]
 
 combinedTextSemigroup :: T.Text
 combinedTextSemigroup = "some" <> " " <> "text"
+
+-- クイックチェック3
+myLines text = T.splitOn "\n" text
+myUnlines textList = T.intercalate "\n" textList
