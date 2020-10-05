@@ -1,28 +1,27 @@
+{-# LANGUAGE OverloadedStrings #-}
 import System.Environment
 import System.IO
+import qualified Data.Text as T
+import qualified Data.Text.IO as TI
 
-getCounts :: String -> (Int, Int, Int)
+getCounts :: T.Text -> (Int, Int, Int)
 getCounts input = (charCount, wordCount, lineCount)
-  where charCount = length input
-        wordCount = (length . words) input
-        lineCount = (length . lines) input
+  where charCount = T.length input
+        wordCount = (length . T.words) input
+        lineCount = (length . T.lines) input
 
-countsText :: (Int, Int, Int) -> String
-countsText (cc, wc, lc) = unwords ["chars:", show cc
+countsText :: (Int, Int, Int) -> T.Text
+countsText (cc, wc, lc) = T.pack(unwords ["chars:", show cc
                                            , " words: "
                                            , show wc
                                            , " lines: "
-                                           , show lc]
+                                           , show lc])
 
 main :: IO()
 main = do
   args <- getArgs
   let fileName = head args
-  file <- openFile fileName ReadMode
-  input <- hGetContents file
+  input <- TI.readFile fileName
   let summary = (countsText . getCounts) input
-  -- hGetContentsは遅延評価のため、出力をして評価させる
-  putStrLn summary
-  appendFile "stats.dat" (mconcat [fileName, " ", summary, "\n"])
-  hClose file
-  putStrLn summary
+  TI.appendFile "stats.dat" (mconcat [T.pack(fileName), " ", summary, "\n"])
+  TI.putStrLn summary
