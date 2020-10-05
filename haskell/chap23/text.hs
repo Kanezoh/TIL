@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 import qualified Data.Text as T
+import Data.Semigroup
 
 -- String→リスト Text→配列
 -- 遅延評価をしないのが特徴
@@ -59,3 +60,12 @@ exampleText = "This is simple to do"
 -- intercalate splitOnと逆
 -- T.intercalate breakText (T.splitOn breakText exampleText)
 -- => "This is simple to do"
+
+-- モノイド演算
+-- TextはString型のような ++ 演算子で結合できない
+
+combinedTextMonoid :: T.Text
+combinedTextMonoid = mconcat ["some", " ", "text"]
+
+combinedTextSemigroup :: T.Text
+combinedTextSemigroup = "some" <> " " <> "text"
