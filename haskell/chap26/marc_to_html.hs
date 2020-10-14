@@ -64,6 +64,20 @@ allRecords marcStream = if marcStream == B.empty
                         else next : allRecords rest
   where (next, rest) = nextAndRest marcStream
 
+type MarcDirectoryRaw = B.ByteString
+-- ベースアドレスの情報はリーダーの12~16番目のバイト
+getBaseAddress :: MarcLeaderRaw -> Int
+getBaseAddress leader = rawToInt (B.take 5 remainder)
+  where remainder = B.drop 12 leader
+-- リーダーが終わる場所〜ベースアドレスの位置までがディレクトリ
+getDirectoryLength :: MarcLeaderRaw -> Int
+getDirectoryLength leader = getBaseAddress leader - (leaderLength - 1)
+-- ディレクトリを取得
+getDirectory :: MarcLeaderRaw -> MarcDirectoryRaw
+getDirectory record = B.take directoryLength afterLeader
+  where directoryLength = getDirectoryLength record
+        afterLeader     = B.drop leaderLength record
+
 main :: IO()
 main = do
   marcData <- B.readFile "sample.mrc"
