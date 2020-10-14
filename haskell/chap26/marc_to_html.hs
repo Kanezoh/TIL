@@ -39,5 +39,33 @@ book3 = Book { title = "The Tears of Eros"
 myBooks :: [Book]
 myBooks = [book1, book2, book3]
 
+type MarcRecordRaw = B.ByteString
+type MarcLeaderRaw = B.ByteString
+
+leaderLength :: Int
+leaderLength = 24
+-- MARCレコードからリーダーを取得(最初の24バイトがリーダー)
+getLeader :: MarcRecordRaw -> MarcLeaderRaw
+getLeader record = B.take leaderLength record
+
+rawToInt :: B.ByteString -> Int
+rawToInt = read . T.unpack . E.decodeUtf8
+-- リーダーからレコードの長さを取得(最初の5バイトがレコードの長さ)
+getRecordLength :: MarcLeaderRaw -> Int
+getRecordLength leader = rawToInt (B.take 5 leader)
+-- marcレコードから先頭1件分のデータと残りのデータに分割
+nextAndRest :: B.ByteString -> (MarcRecordRaw, B.ByteString)
+nextAndRest marcStream = B.splitAt recordLength marcStream
+  where recordLength = getRecordLength marcStream
+
+allRecords :: B.ByteString -> [MarcRecordRaw]
+allRecords marcStream = if marcStream == B.empty
+                        then []
+                        else next : allRecords rest
+  where (next, rest) = nextAndRest marcStream
+
 main :: IO()
-main = TIO.writeFile "books.html" (booksToHtml myBooks)
+main = do
+  marcData <- B.readFile "sample.mrc"
+  let marcRecords = allRecords marcData
+  print (length marcRecords)
