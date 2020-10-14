@@ -78,6 +78,40 @@ getDirectory record = B.take directoryLength afterLeader
   where directoryLength = getDirectoryLength record
         afterLeader     = B.drop leaderLength record
 
+type MarcDirectoryEntryRaw = B.ByteString
+dirEntryLength :: Int
+dirEntryLength = 12
+-- ディレクトリを12バイトごとのエントリに区切る
+splitDirectory :: MarcDirectoryRaw -> [MarcDirectoryEntryRaw]
+splitDirectory directory = if directory == B.empty
+                           then []
+                           else nextEntry : splitDirectory restEntries
+  where (nextEntry, restEntries) = B.splitAt dirEntryLength directory
+
+data FieldMetaData = FieldMetaData { tag         :: T.Text
+                                    ,fieldLength :: Int
+                                    ,fieldStart  :: Int } deriving Show
+makeFieldMetaData :: MarcDirectoryEntryRaw -> FieldMetaData
+makeFieldMetaData entry = FieldMetaData textTag theLength theStart
+  where (theTag, rest) = B.splitAt 3 entry
+        textTag = E.decodeUtf8 theTag
+        (rawLength, rawStart) = B.splitAt 4 rest
+        theLength = rawToInt rawLength
+        theStart  = rawToInt rawStart
+
+getFieldMetaData :: [MarcDirectoryEntryRaw] -> [FieldMetaData]
+getFieldMetaData rawEntries = map makeFieldMetaData rawEntries
+
+type FieldText = T.Text
+
+getTextField :: MarcRecordRaw -> FieldMetaData -> FieldText
+getTextField record fieldMetaData = E.decodeUtf8 byteStringValue
+  where recordLength = getRecordLength record
+        baseAddress  = getBaseAddress  record
+        baseRecord   = B.drop baseAddress record
+        baseAtEntry  = B.drop (fieldStart fieldMetaData) baseRecord
+        byteStringValue = B.take (fieldLength fieldMetaData) baseAtEntry
+
 main :: IO()
 main = do
   marcData <- B.readFile "sample.mrc"
