@@ -112,6 +112,44 @@ getTextField record fieldMetaData = E.decodeUtf8 byteStringValue
         baseAtEntry  = B.drop (fieldStart fieldMetaData) baseRecord
         byteStringValue = B.take (fieldLength fieldMetaData) baseAtEntry
 
+fieldDelimiter :: Char
+fieldDelimiter = toEnum 31
+
+titleTag :: T.Text
+titleTag = "245"
+titleSubField :: Char
+titleSubField = 'a'
+authorTag :: T.Text
+authorTag = "100"
+authorSubField :: Char
+authorSubField = 'a'
+
+lookupFieldMetaData :: T.Text -> MarcRecordRaw -> Maybe FieldMetaData
+lookupFieldMetaData aTag record = if length results < 1
+                                  then Nothing
+                                  else Just (head results)
+  where metaData = (getFieldMetaData . splitDirectory . getDirectory) record
+        results  = filter ((== aTag) . tag) metaData
+
+lookupSubField :: (Maybe FieldMetaData) -> Char -> MarcRecordRaw -> Maybe T.Text
+lookupSubField Nothing subfield record = Nothing
+lookupSubField (Just fieldMetaData) subfield record = if results == []
+                                                      then Nothing
+                                                      else Just ((T.drop 1 . head) results)
+  where rawField  = getTextField record fieldMetaData
+        subfields = T.split (== fieldDelimiter) rawField
+        results   = filter ((== subfield) . T.head) subfields
+
+lookupValue :: T.Text -> Char -> MarcRecordRaw -> Maybe T.Text
+lookupValue aTag subfield record = lookupSubField entryMetaData subfield record
+  where entryMetaData = lookupFieldMetaData aTag record
+
+lookupTitle :: MarcRecordRaw -> Maybe Title
+lookupTitle = lookupValue titleTag titleSubField
+
+lookupAuthor :: MarcRecordRaw -> Maybe Author
+lookupAuthor = lookupValue authorTag authorSubField
+
 main :: IO()
 main = do
   marcData <- B.readFile "sample.mrc"
