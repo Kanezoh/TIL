@@ -16,7 +16,7 @@ reverseMaybe :: Maybe String -> Maybe String
 reverseMaybe str = reverse <$> str
 
 -- Functor で型クラスのコンテキストで関数を適用する
--- <$>はfmapのエイリアス
+-- <$>はfmapのエイリアス 
 successStr :: Maybe String
 successStr = show <$> successfulRequest
 
