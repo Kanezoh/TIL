@@ -62,3 +62,10 @@ allPartsHtml = renderHtml <$> allParts
 -- partsDBをHTMLに変換する
 htmlPartsDB :: Map.Map Int Html
 htmlPartsDB = renderHtml <$> partsDB
+
+-- IOから得られるleftArmIO
+leftArmIO :: IO RobotPart
+leftArmIO = return leftArm
+
+htmlSnippet :: IO Html
+htmlSnippet = renderHtml <$> leftArmIO
