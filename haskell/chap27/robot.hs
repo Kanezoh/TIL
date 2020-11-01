@@ -1,3 +1,5 @@
+import qualified Data.Map as Map
+
 data RobotPart = RobotPart { name        :: String
                            , description :: String
                            , cost        :: Double
@@ -31,8 +33,29 @@ renderHtml part = mconcat ["<h2>", partName, "</h2>"
                          , "</p><p><h3>cost</h3>"
                          , partCost
                          , "</p><p><h3>count</h3>"
-                         , partCount, "<p>"]
+                         , partCount, "</p>"]
   where partName = name part
         partDesc = description part
         partCost = show (cost part)
         partCount = show (count part)
+
+partsDB :: Map.Map Int RobotPart
+partsDB = Map.fromList keyVals
+  where keys = [1, 2, 3]
+        vals = [leftArm, rightArm, robotHead]
+        keyVals = zip keys vals
+
+--insertSnippet :: Maybe Html -> IO ()
+
+partVal :: Maybe RobotPart
+partVal = Map.lookup 1 partsDB
+
+partHtml :: Maybe Html
+partHtml = renderHtml <$> partVal
+
+allParts :: [RobotPart]
+allParts = snd <$> Map.toList partsDB
+
+allPartsHtml :: [Html]
+allPartsHtml = renderHtml <$> allParts
+
