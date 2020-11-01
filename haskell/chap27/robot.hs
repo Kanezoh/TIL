@@ -59,3 +59,6 @@ allParts = snd <$> Map.toList partsDB
 allPartsHtml :: [Html]
 allPartsHtml = renderHtml <$> allParts
 
+-- partsDBをHTMLに変換する
+htmlPartsDB :: Map.Map Int Html
+htmlPartsDB = renderHtml <$> partsDB
