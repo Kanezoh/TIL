@@ -69,3 +69,13 @@ leftArmIO = return leftArm
 
 htmlSnippet :: IO Html
 htmlSnippet = renderHtml <$> leftArmIO
+
+-- 練習問題 27-1
+newType Box a = Box a deriving Show
+instance Functor Box where
+  fmap func (Just n) = Just (func n)
+  fmap func Nothing  = Nothing
+
+morePresents :: Int -> Box a -> Box [a]
+morePresents count present = fmap (nCopies count) present
+  where nCopies count item = (take count . repeat) item
