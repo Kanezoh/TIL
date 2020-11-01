@@ -26,3 +26,11 @@ haversine coords1 coords2 = earthRadius * c
         c = 2 * atan2 (sqrt a) (sqrt (1 - a))
         earthRadius = 3961.0
 
+printDistance :: Maybe Double -> IO()
+printDistance Nothing = putStrLn "Error, invalid city entered"
+printDistance (Just distance) = putStrLn (show distance ++ "miles")
+
+-- クイックチェック1
+addMaybe :: Maybe Int -> Maybe Int -> Maybe Int
+addMaybe (Just a) (Just b) = Just (a + b)
+addMaybe _ _ = Nothing
