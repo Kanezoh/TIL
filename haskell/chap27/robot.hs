@@ -89,3 +89,14 @@ wrap val = Box val
 unwrap :: Box a -> a
 unwrap (Box val) = val
 
+-- 練習問題 27-3
+printCost :: Maybe Double -> IO()
+printCost Nothing = putStrLn "item not found"
+printCost (Just cost) = print cost
+
+main :: IO()
+main = do
+  putStrLn "enter a part number"
+  partNo <- getLine
+  let part = Map.lookup (read partNo) partsDB
+  printCost (cost <$> part)
