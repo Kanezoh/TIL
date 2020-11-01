@@ -71,11 +71,21 @@ htmlSnippet :: IO Html
 htmlSnippet = renderHtml <$> leftArmIO
 
 -- 練習問題 27-1
-newType Box a = Box a deriving Show
+newtype Box a = Box a deriving Show
 instance Functor Box where
-  fmap func (Just n) = Just (func n)
-  fmap func Nothing  = Nothing
+  fmap func (Box val) = Box (func val)
 
 morePresents :: Int -> Box a -> Box [a]
 morePresents count present = fmap (nCopies count) present
   where nCopies count item = (take count . repeat) item
+
+-- 練習問題 27-2
+myBox :: Box Int
+myBox = Box 1
+
+wrap :: a -> Box a
+wrap val = Box val
+
+unwrap :: Box a -> a
+unwrap (Box val) = val
+
