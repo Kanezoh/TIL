@@ -33,4 +33,4 @@ printDistance (Just distance) = putStrLn (show distance ++ "miles")
 -- クイックチェック1
 addMaybe :: Maybe Int -> Maybe Int -> Maybe Int
 addMaybe (Just a) (Just b) = Just (a + b)
-addMaybe _ _ = Nothing
+addMaybe _ _ = Nothing 
