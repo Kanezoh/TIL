@@ -65,3 +65,5 @@ haversineIO ioVal1 ioVal2 = do
   val2 <- ioVal2
   let dist = haversine val1 val2
   return dist
+-- 練習問題2
+-- haversineIO <$> ioVal1 <*> ioVal2
