@@ -21,3 +21,10 @@ boxPrize = [500,2000]
 -- 非決定論的なコンテキスト
 totalPrize :: [Int]
 totalPrize = pure (+) <*> doorPrize <*> boxPrize
+
+-- 素数のリストを返す
+primesToN :: Integer -> [Integer]
+primesToN n = filter isNotComposite twoThroughN
+  where twoThroughN = [2 .. n]
+        composite = pure (*) <*> twoThroughN <*> twoThroughN
+        isNotComposite = not . (`elem` composite)
