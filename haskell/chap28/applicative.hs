@@ -34,3 +34,26 @@ printDistance (Just distance) = putStrLn (show distance ++ "miles")
 addMaybe :: Maybe Int -> Maybe Int -> Maybe Int
 addMaybe (Just a) (Just b) = Just (a + b)
 addMaybe _ _ = Nothing 
+
+-- Functorに部分適用を試す
+maybeInc = (+) <$> Just 1
+-- 型シグネチャがMaybe (Integer -> Integer)になっている
+-- これを適用するにはApplicative型クラスの<*> 演算子が使える
+-- ex) maybeInc <*> Just 5
+-- (++) <$> Just "cats" <*> Just "and dogs"
+val1 = Just 10
+val2 = Just 5
+--(*) <$> val1 <*> val2
+--(div) <$> val1 <*> val2
+--(mod) <$> val1 <*> val2
+
+main :: IO ()
+main = do
+  putStrLn "Enter the starting city name:"
+  startingInput <- getLine
+  let startingCity = Map.lookup startingInput locationDB
+  putStrLn "Enter the destination city name:"
+  destInput <- getLine
+  let destCity = Map.lookup destInput locationDB
+  let distance = haversine <$> startingCity <*> destCity
+  printDistance distance
