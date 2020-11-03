@@ -8,3 +8,16 @@
 -- (6+) <$> Just 5 => Just 11
 -- pure (6+) <*> Just 5 => Just 11
 
+doorPrize :: [Int]
+doorPrize = [1000,2000,3000]
+
+boxPrize :: [Int]
+boxPrize = [500,2000]
+
+-- 決定論的なコンテキスト(疑似こーど)
+-- totalPrize :: Int
+-- totalPrize = (+) doorPrize BoxPrize
+
+-- 非決定論的なコンテキスト
+totalPrize :: [Int]
+totalPrize = pure (+) <*> doorPrize <*> boxPrize
