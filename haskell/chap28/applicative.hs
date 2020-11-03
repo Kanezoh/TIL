@@ -57,3 +57,11 @@ main = do
   let destCity = Map.lookup destInput locationDB
   let distance = haversine <$> startingCity <*> destCity
   printDistance distance
+
+-- 練習問題1
+haversineIO :: IO LatLog -> IO LatLog -> IO Double
+haversineIO ioVal1 ioVal2 = do
+  val1 <- ioVal1
+  val2 <- ioVal2
+  let dist = haversine val1 val2
+  return dist
