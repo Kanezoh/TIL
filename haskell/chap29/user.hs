@@ -19,4 +19,4 @@ testScores = [ 0
              , -999999]
 
 testData :: [User]
-testData = pure User <*> testNames <*> testIds <*> testScores
+testData = pure User <*> testNames <*> testIds <*> testScores 
