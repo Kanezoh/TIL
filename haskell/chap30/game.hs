@@ -11,7 +11,7 @@ userNameDB = Map.fromList [ (1, "nYarlathoTep")
                           , (3, "dagon1997")
                           , (4, "rcarter1919")
                           , (5, "xCTHULHUx")
-                          , (6, "yogSOThoth")]
+                          , (6, "yogSOThoth") ]
 
 -- userNameに基づいてPlayerCreditsを調べるためのデータベース
 creditsDB :: Map.Map UserName PlayerCredits
