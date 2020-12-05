@@ -33,3 +33,4 @@ altLookupCredits Nothing = Nothing
 altLookupCredits (Just username) = lookupCredits username
 
 creditsFromId :: GamerId -> Maybe PlayerCredits
+creditsFromId id = altLookupCredits (lookupUserName id)
