@@ -22,10 +22,14 @@ creditsDB = Map.fromList [ ("nYarlathoTep", 2000)
                          , ("xCTHULHUx", 50000)
                          , ("yogSOThoth", 150000)]
 
-creditsFromId :: GamerId -> Maybe PlayerCredits
-
 lookupUserName :: GamerId -> Maybe UserName
 lookupUserName id = Map.lookup id userNameDB
 
 lookupCredits :: UserName -> Maybe PlayerCredits
 lookupCredits username = Map.lookup username creditsDB
+
+altLookupCredits :: Maybe UserName -> Maybe PlayerCredits
+altLookupCredits Nothing = Nothing
+altLookupCredits (Just username) = lookupCredits username
+
+creditsFromId :: GamerId -> Maybe PlayerCredits
