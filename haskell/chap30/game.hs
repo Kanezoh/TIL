@@ -33,4 +33,19 @@ altLookupCredits Nothing = Nothing
 altLookupCredits (Just username) = lookupCredits username
 
 creditsFromId :: GamerId -> Maybe PlayerCredits
-creditsFromId id = altLookupCredits (lookupUserName id)
+--creditsFromId id = altLookupCredits (lookupUserName id)
+
+-- Monadのbind演算子(>>=)を使ったcreditsFromIdの実装
+-- (>>=) :: Monad m => m a -> (a -> m b) -> m b
+creditsFromId id = lookupUserName id >>= lookupCredits
+
+type WillCoId = Int
+
+gamerIdDB :: Map.Map WillCoId GamerId
+gamerIdDB = Map.fromList [(1001,1), (1002,2), (1003,3), (1004,4), (1005,5), (1006,6)]
+
+lookupGamerId :: WillCoId -> Maybe GamerId
+lookupGamerId id = Map.lookup id gamerIdDB
+
+creditsFromWCId :: WillCoId -> Maybe PlayerCredits
+creditsFromWCId id = lookupGamerId id >>= lookupUserName >>= lookupCredits
