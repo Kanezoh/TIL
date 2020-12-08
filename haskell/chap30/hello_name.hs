@@ -15,3 +15,7 @@ allFmapM func val = val >>= (\x -> return (func x))
 allApp :: Monad m => m(a -> b) -> m a -> m b
 allApp func val = func >>= (\f -> val >>= (\x -> return (f x)))
 
+-- 練習問題3
+bind :: Maybe a -> (a -> Maybe b) -> Maybe b
+bind Nothing _ = Nothing
+bind (Just val) func = func val
