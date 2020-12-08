@@ -10,3 +10,8 @@ helloName = askForName >> getLine >>= (\name -> return (nameStatement name)) >>=
 -- 練習問題1
 allFmapM :: Monad m => (a -> b) -> m a -> m b
 allFmapM func val = val >>= (\x -> return (func x))
+
+-- 練習問題2
+allApp :: Monad m => m(a -> b) -> m a -> m b
+allApp func val = func >>= (\f -> val >>= (\x -> return (f x)))
+
