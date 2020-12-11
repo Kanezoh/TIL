@@ -96,3 +96,15 @@ assessCandidateDataMaybe cId = do
                   then "passed"
                   else "failed"
   return statement
+
+candidates :: [Candidate]
+candidates = [candidate1,candidate2,candidate3]
+
+assessCandidateList :: [Candidate] -> [String]
+assessCandidateList candidates = do
+  candidate <- candidates
+  let passed = viable candidate
+  let statement = if passed
+                  then "passed"
+                  else "failed"
+  return statement
