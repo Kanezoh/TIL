@@ -1,3 +1,5 @@
+import qualified Data.Map as Map
+
 askForName :: IO()
 askForName = putStrLn "What is your name?"
 
@@ -57,6 +59,38 @@ readCandidate = do
 assessCandidateIO :: IO String
 assessCandidateIO = do
   candidate <- readCandidate
+  let passed = viable candidate
+  let statement = if passed
+                  then "passed"
+                  else "failed"
+  return statement
+-- 候補者のデータ
+candidate1 :: Candidate
+candidate1 = Candidate { candidateId = 1
+                       , codeReview  = A
+                       , cultureFit  = A
+                       , education   = BA }
+
+candidate2 :: Candidate
+candidate2 = Candidate { candidateId = 2
+                       , codeReview  = C
+                       , cultureFit  = A
+                       , education   = PhD }
+
+
+candidate3 :: Candidate
+candidate3 = Candidate { candidateId = 3
+                       , codeReview  = A
+                       , cultureFit  = B
+                       , education   = MS }
+
+candidateDB :: Map.Map Int Candidate
+candidateDB = Map.fromList [(1,candidate1), (2,candidate2), (3,candidate3)]
+
+-- Maybe型のassess関数、MapのlookupではMaybeが返ってくるため
+assessCandidateDataMaybe :: Int -> Maybe String
+assessCandidateDataMaybe cId = do
+  candidate <- Map.lookup cId candidateDB
   let passed = viable candidate
   let statement = if passed
                   then "passed"
