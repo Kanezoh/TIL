@@ -53,3 +53,12 @@ readCandidate = do
                     , codeReview  = codeGrade
                     , cultureFit  = cultureGrade
                     , education   = degree })
+
+assessCandidateIO :: IO String
+assessCandidateIO = do
+  candidate <- readCandidate
+  let passed = viable candidate
+  let statement = if passed
+                  then "passed"
+                  else "failed"
+  return statement
