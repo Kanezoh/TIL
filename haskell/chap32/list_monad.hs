@@ -75,3 +75,9 @@ answer = ["Mr. " ++ capVal
          | val <- ["brown", "blue", "pink"]
          , let capVal = (\(x: xs) -> toUpper x:xs) val]
 
+-- 練習問題1
+monthEnds :: [Int]
+monthEnds = [31,28,31,30,31,30,31,31,30,31,30,31]
+
+dates :: [Int] -> [Int]
+dates ends = [date | end <- ends, date <- [1..end]]
