@@ -54,3 +54,28 @@ _join data1 data2 prop1 prop2 = do
   return dpairs
   guard ((prop1 (fst dpairs)) == (prop2 (snd dpairs)))
   return dpairs
+
+joinData :: [(Teacher, Course)]
+joinData = _join teachers courses teacherId teacher
+
+whereResult :: [(Teacher, Course)]
+whereResult = _where ((== "English") . courseTitle . snd) joinData
+
+selectResult :: [Name]
+selectResult = _select (teacherName . fst) whereResult
+
+_hinq selectQuery joinQuery whereQuery = (\joinData ->
+                                           (\whereResult ->
+                                             selectQuery whereResult)
+                                           (whereQuery joinData)
+                                         ) joinQuery
+
+finalResult :: [Name]
+finalResult = _hinq (_select (teacherName .fst))
+                    (_join teachers courses teacherId teacher)
+                    (_where ((== "English") . courseTitle . snd))
+-- 全てのデータを取り出したい→whereにTrueを渡せばいい
+teacherFirstName :: [String]
+teacherFirstName = _hinq (_select firstName)
+                   finalResult
+                   (_where (\_ -> True))
