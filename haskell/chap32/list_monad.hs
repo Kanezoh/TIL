@@ -1,3 +1,5 @@
+import Control.Monad
+
 -- リスト内包
 powersOfTwo :: Int -> [Int]
 powersOfTwo n = do
@@ -28,3 +30,17 @@ oneToTenSquare = do
   num <- [1 .. 10]
   let squareNum = num * num
   return (num,squareNum)
+
+-- guard関数、filterのMonad版、条件に合わない物は排除
+evenGuard :: Int -> [Int]
+evenGuard n = do
+  value <- [1 .. n]
+  guard (even value)
+  return value
+
+-- クイックチェック2
+guardFilter :: (a -> Bool) -> [a] -> [a]
+guardFilter func arr = do
+  value <- arr
+  guard (func value)
+  return value
