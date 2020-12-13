@@ -5,3 +5,7 @@ powersOfTwo n = do
   -- いないように振舞うことができる
   value <- [1 .. n]
   return (2^value)
+
+-- mapで
+-- powersOfTwo :: Int -> [Int]
+-- powersOfTwo n = map (\x -> 2^x) [1..n]
