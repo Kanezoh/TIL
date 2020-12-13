@@ -22,3 +22,9 @@ allEvenOdds n = do
   evenValue <- [2,4 .. n]
   oddValue <- [1,3 .. n]
   return (evenValue,oddValue)
+
+-- クイックチェック1
+oneToTenSquare = do
+  num <- [1 .. 10]
+  let squareNum = num * num
+  return (num,squareNum)
