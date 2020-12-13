@@ -1,3 +1,5 @@
+import Control.Monad
+
 data Name = Name { firstName :: String, lastName :: String}
 
 instance Show Name where
@@ -22,3 +24,13 @@ _select :: (a -> b) -> [a] -> [b]
 _select prop vals = do
   val <- vals
   return (prop val)
+
+-- where関数
+_where :: (a -> Bool) -> [a] -> [a]
+_where tests vals = do
+  val <- vals
+  guard (tests val)
+  return val
+
+startsWith :: Char -> String -> Bool
+startsWith char string = char == head string
