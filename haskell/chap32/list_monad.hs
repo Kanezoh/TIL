@@ -1,4 +1,6 @@
 import Control.Monad
+import Data.Char
+
 
 powersOfTwo :: Int -> [Int]
 powersOfTwo n = do
@@ -62,3 +64,14 @@ evenSquare = do
 -- allEvenOdds :: Int -> [(Int, Int)]
 -- allEvenOdds n = [(evenValue,oddValue) | evenValue <- [2,4 .. n]
 --                                       , oddValue <- [1,3 .. n]]
+
+-- guardもリスト内包にできる
+-- evenGuard :: Int -> [Int]
+-- evenGuard n = [value | value <- [1 .. n], even value]
+
+-- クイックチェック3
+answer :: [String]
+answer = ["Mr. " ++ capVal
+         | val <- ["brown", "blue", "pink"]
+         , let capVal = (\(x: xs) -> toUpper x:xs) val]
+
