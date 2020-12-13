@@ -16,3 +16,9 @@ students = [ (Student 1 Senior (Name "Audre" "Lorde"))
            , (Student 4 Senior (Name "Guy" "Debord"))
            , (Student 5 Sophomore (Name "Jean" "Baudrillard"))
            , (Student 6 Junior (Name "Julia" "Kristeva")) ]
+
+-- select関数
+_select :: (a -> b) -> [a] -> [b]
+_select prop vals = do
+  val <- vals
+  return (prop val)
