@@ -113,3 +113,36 @@ maybeQuery2 :: HINQ Maybe (Teacher,Course) Name
 maybeQuery2 = HINQ (_select (teacherName . fst))
                    (_join possibleTeacher missingCourse teacherId teacher)
                    (_where ((== "French") . courseTitle . snd))
+
+-- 履修者(student)と講義(コース)を結び付けるためのデータ型(いわゆる中間テーブル)
+data Enrollment = Enrollment { student :: Int, course :: Int } deriving Show
+
+enrollments :: [Enrollment]
+enrollments = [ (Enrollment 1 101)
+              , (Enrollment 2 101)
+              , (Enrollment 2 201)
+              , (Enrollment 3 101)
+              , (Enrollment 4 201)
+              , (Enrollment 4 101)
+              , (Enrollment 5 101)
+              , (Enrollment 6 201) ]
+
+-- 生徒と履修の結合
+studentEnrollmentsQ = HINQ_ (_select (\(st, en) -> (studentName st, course en)))
+                            (_join students enrollments studentId student)
+studentEnrollments :: [(Name, Int)]
+studentEnrollments = runHINQ studentEnrollmentsQ
+
+-- 英語を履修している生徒
+englishStudentsQ = HINQ (_select (fst . fst))
+                        (_join studentEnrollments courses snd courseId)
+                        (_where ((== "English") . courseTitle . snd))
+
+englishStudents :: [Name]
+englishStudents = runHINQ englishStudentsQ
+
+getEnrollments :: String -> [Name]
+getEnrollments courseName = runHINQ courseQuery
+  where courseQuery = HINQ (_select (fst . fst))
+                           (_join studentEnrollments courses snd courseId)
+                           (_where ((== courseName) . courseTitle . snd))
