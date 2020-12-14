@@ -94,3 +94,22 @@ query1 = HINQ (_select (teacherName . fst))
 query2 :: HINQ [] Teacher Name
 query2 = HINQ_ (_select teacherName) teachers
 
+-- HINQをMaybeで利用(今まではリスト)
+possibleTeacher :: Maybe Teacher
+possibleTeacher = Just (head teachers)
+
+possibleCourse :: Maybe Course
+possibleCourse = Just (head courses)
+
+maybeQuery1 :: HINQ Maybe (Teacher,Course) Name
+maybeQuery1 = HINQ (_select (teacherName . fst))
+                   (_join possibleTeacher possibleCourse teacherId teacher)
+                   (_where ((== "French") . courseTitle . snd))
+
+missingCourse :: Maybe Course
+missingCourse = Nothing
+
+maybeQuery2 :: HINQ Maybe (Teacher,Course) Name
+maybeQuery2 = HINQ (_select (teacherName . fst))
+                   (_join possibleTeacher missingCourse teacherId teacher)
+                   (_where ((== "French") . courseTitle . snd))
