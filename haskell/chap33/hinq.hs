@@ -1,4 +1,5 @@
 import Control.Monad
+import Control.Applicative
 
 data Name = Name { firstName :: String, lastName :: String}
 
@@ -31,13 +32,13 @@ students = [ (Student 1 Senior (Name "Audre" "Lorde"))
            , (Student 6 Junior (Name "Julia" "Kristeva")) ]
 
 -- select関数
-_select :: (a -> b) -> [a] -> [b]
+_select :: Monad m => (a -> b) -> m a -> m b
 _select prop vals = do
   val <- vals
   return (prop val)
 
 -- where関数
-_where :: (a -> Bool) -> [a] -> [a]
+_where :: (Monad m, Alternative m) => (a -> Bool) -> m a -> m a
 _where tests vals = do
   val <- vals
   guard (tests val)
@@ -46,7 +47,7 @@ _where tests vals = do
 startsWith :: Char -> String -> Bool
 startsWith char string = char == head string
 
-_join :: Eq c => [a] -> [b] -> (a -> c) -> (b -> c) -> [(a,b)]
+_join :: (Monad m, Alternative m, Eq c) => m a -> m b -> (a -> c) -> (b -> c) -> m (a,b)
 _join data1 data2 prop1 prop2 = do
   d1 <- data1
   d2 <- data2
@@ -79,3 +80,9 @@ teacherFirstName :: [String]
 teacherFirstName = _hinq (_select firstName)
                    finalResult
                    (_where (\_ -> True))
+
+data HINQ m a b = HINQ (m a -> m b) (m a) (m a -> m a) | HINQ_ (m a -> m b) (m a)
+
+runHINQ :: (Monad m, Alternative m) => HINQ m a b -> m b
+runHINQ (HINQ sClause jClause wClause) = _hinq sClause jClause wClause
+runHINQ (HINQ_ sClause jClause) = _hinq sClause jClause (_where (\_ -> True))
