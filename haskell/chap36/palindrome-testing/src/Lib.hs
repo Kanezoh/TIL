@@ -4,4 +4,4 @@ module Lib
 
 isPalindrome :: String -> Bool
 isPalindrome text = cleanText == reverse cleanText
-  where cleanText = filter (not . (== '!')) text
+  where cleanText = filter (not . (`elem` ['!','.'])) text
