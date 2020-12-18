@@ -5,6 +5,8 @@ import Test.QuickCheck
 prop_punctuationInvariant text = preprocess text == preprocess noPuncText
   where noPuncText = filter (not . isPunctuation) text
 
+prop_reverseInvariant text = isPalindrome text == isPalindrome (reverse text)
+
 assert :: Bool -> String -> String -> IO ()
 assert test passStatement failStatement = if test
                                           then putStrLn passStatement
@@ -20,5 +22,6 @@ main = do
   assert (isPalindrome "racecar.") "passed 'racecar.'" "FAIL: 'racecar.'"
   assert (isPalindrome ":racecar:") "passed ':racecar:'" "FAIL: ':racecar:'"
   quickCheckWith stdArgs { maxSuccess = 1000 } prop_punctuationInvariant
+  quickCheckWith stdArgs { maxSuccess = 1000 } prop_reverseInvariant
   putStrLn "done"
   
