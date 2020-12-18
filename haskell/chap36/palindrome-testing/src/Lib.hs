@@ -3,4 +3,5 @@ module Lib
     ) where
 
 isPalindrome :: String -> Bool
-isPalindrome text = text == reverse text
+isPalindrome text = cleanText == reverse cleanText
+  where cleanText = filter (not . (== '!')) text
