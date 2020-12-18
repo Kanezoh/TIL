@@ -59,4 +59,5 @@ test-suite palindrome-testing-test
   build-depends:
       base >=4.7 && <5
     , palindrome-testing
+    , QuickCheck
   default-language: Haskell2010
