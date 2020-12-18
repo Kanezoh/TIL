@@ -1,6 +1,6 @@
 module Lib
-    ( someFunc
+    ( isPalindrome
     ) where
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+isPalindrome :: String -> Bool
+isPalindrome text = text == reverse text
