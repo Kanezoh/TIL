@@ -1,7 +1,7 @@
 module Primes where
 
 primes :: [Int]
-primes = [1.. ]
+primes = sieve [2 .. 10000]
 
 -- 「エラトステネスのふるい」というアルゴリズム
 -- [2,3,4,5]のような並びであれば、まずは2を最初の素数として
@@ -11,3 +11,8 @@ sieve :: [Int] -> [Int]
 sieve [] = []
 sieve (nextPrime:rest) = nextPrime : sieve noFactors
   where noFactors = filter (not . (== 0) . (`mod` nextPrime)) rest
+
+isPrime :: Int -> Maybe Bool
+isPrime n | n < 0 = Nothing
+          | n >= last primes = Nothing
+          | otherwise = Just (n `elem` primes)
