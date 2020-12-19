@@ -3,7 +3,7 @@ import Primes
 import Data.Maybe
 
 -- 0未満、最大値より上の入力の時はNothingを返すかどうかをテスト
-prop_validPrimesOnly val = if val < 0 || val >= last primes
+prop_validPrimesOnly val = if val < 2 || val >= last primes
                            then result == Nothing
                            else isJust result
   where result = isPrime val
