@@ -9,6 +9,9 @@ prop_punctuationInvariant text = preprocess text == preprocess noPuncText
 
 prop_reverseInvariant text = isPalindrome text == isPalindrome (T.reverse text)
 
+prop_isPalindrome text = isPalindrome text == isPalindrome (T.reverse text)
+
+
 
 main :: IO ()
 main = do
