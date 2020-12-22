@@ -70,5 +70,14 @@ isPrime n
   | n > maxN = Left TooLarge
   | otherwise = Right (n `elem` primes)
 
+displayResult :: Either PrimeError Bool -> String
+displayResult (Right True) = "It's prime"
+displayResult (Right False) = "It's composite"
+displayResult (Left primeerror) = show primeerror
+
 main :: IO ()
-main = return ()
+main = do
+  print "Enter a number to test for primality:"
+  n <- read <$> getLine
+  let result = isPrime n
+  print (displayResult result)
