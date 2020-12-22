@@ -19,5 +19,12 @@ myHead :: [a] -> a
 myHead [] = error "empty list!"
 myHead (x:_) = x
 
+-- Maybeのhead
+maybeHead :: [a] -> Maybe a
+maybeHead [] = Nothing
+maybeHead(x:_) = Just x
+-- (+2) <$> maybeHead [1]
+-- (:) <$> maybeHead [1,2,3] <*> Just []
+
 main :: IO ()
 main = return ()
