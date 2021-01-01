@@ -21,6 +21,16 @@ buildRequest token host method path = setRequestMethod method
                                     $ setRequestSecure True
                                     $ setRequestPort 443
                                     $ defaultRequest
+
+buildRequestNoSSL :: BC.ByteString -> BC.ByteString -> BC.ByteString -> BC.ByteString -> Request
+buildRequestNoSSL token host method path = setRequestMethod method
+                                    $ setRequestHost host
+                                    $ setRequestHeader "token" [myToken]
+                                    $ setRequestPath path
+                                    $ setRequestSecure False
+                                    $ setRequestPort 80
+                                    $ defaultRequest
+
 request :: Request
 request = buildRequest myToken noaaHost "GET" apiPath
 main :: IO ()
