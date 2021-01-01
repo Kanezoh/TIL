@@ -46,7 +46,10 @@ executable http-lesson-exe
   build-depends:
       base >=4.7 && <5
     , http-lesson
+    , bytestring
+    , http-conduit
   default-language: Haskell2010
+  extensions: OverloadedStrings
 
 test-suite http-lesson-test
   type: exitcode-stdio-1.0
