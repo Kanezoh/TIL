@@ -27,5 +27,20 @@ wrongJSON = "{\"writer\":\"Emil Ciroan\",\"title\":\"A Short History of Decay\",
 bookFromWrongJSON :: Maybe Book
 bookFromWrongJSON = decode wrongJSON
 
+sampleError :: BC.ByteString
+sampleError = "{\"message\":\"opps\",\"error\":123}"
+-- sampleErrorに対応するデータ型
+-- errorという名前のプロパティを作りたいが、組み込み関数のエラーと被る
+data ErrorMessage = ErrorMessage { message :: T.Text
+                                 , errorCode :: Int
+                                 } deriving Show
+instance FromJSON ErrorMessage where
+  parseJSON (Object v) = ErrorMessage <$> v .: "message" <*> v .: "error"
+
+exampleMessage :: Maybe T.Text
+exampleMessage = Just "opps"
+exampleError :: Maybe Int
+exampleError = Just 123
+
 main :: IO ()
 main = print "hi"
