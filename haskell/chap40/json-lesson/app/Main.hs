@@ -34,6 +34,7 @@ sampleError = "{\"message\":\"opps\",\"error\":123}"
 data ErrorMessage = ErrorMessage { message :: T.Text
                                  , errorCode :: Int
                                  } deriving Show
+-- parseJSONを使って記述する
 instance FromJSON ErrorMessage where
   parseJSON (Object v) = ErrorMessage <$> v .: "message" <*> v .: "error"
 
@@ -42,5 +43,15 @@ exampleMessage = Just "opps"
 exampleError :: Maybe Int
 exampleError = Just 123
 
+sampleErrorMessage :: Maybe ErrorMessage
+sampleErrorMessage = decode sampleError
+
+-- ToJSONも独自に記述する
+instance ToJSON ErrorMessage where
+  toJSON (ErrorMessage message errorCode) = object [ "message" .= message
+                                                    , "error"   .= errorCode
+                                                    ]
+anErrorMessage :: ErrorMessage
+anErrorMessage = ErrorMessage "Everything is okay" 0
 main :: IO ()
 main = print "hi"
