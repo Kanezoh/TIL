@@ -105,6 +105,16 @@ updateToolTable toolId = withConn "tools.db" $ \conn -> do
   currentDay <- utctDay <$> getCurrentTime
   let updatedTool = updateTool <$> tool <*> pure currentDay
   updateOrWarn updatedTool
+-- データを削除する
+-- 返却されたツールをcheckedoutテーブルから削除する
+checkin :: Int -> IO()
+checkin toolId = withConn "tools.db" $ \conn -> do
+  execute conn "DELETE FROM checkedout WHERE tool_id = (?);" (Only toolId)
+
+checkInAndUpdate :: Int -> IO()
+checkInAndUpdate toolId = do
+  checkin toolId
+  updateToolTable toolId
 
 main :: IO ()
 main = print "db-lesson"
