@@ -116,5 +116,41 @@ checkInAndUpdate toolId = do
   checkin toolId
   updateToolTable toolId
 
+-- 全てのアクションを一つにまとめる
+promptAndAddUser :: IO()
+promptAndAddUser = do
+  print "Enter new user name"
+  userName <- getLine
+  addUser userName
+
+promptAndCheckout :: IO()
+promptAndCheckout = do
+  print "Enter the id of the user"
+  userId <- pure read <*> getLine
+  print "Enter the id of the tool"
+  toolId <- pure read <*> getLine
+  checkout userId toolId
+
+promptAndCheckIn :: IO()
+promptAndCheckIn = do
+  print "Enter the id of tool"
+  toolId <- pure read <*> getLine
+  checkInAndUpdate toolId
+
+performCommand :: String -> IO()
+performCommand command
+  | command == "users" = printUsers >> main
+  | command == "tools" = printTools >> main
+  | command == "adduser" = promptAndAddUser >> main
+  | command == "checkout" = promptAndCheckout >> main
+  | command == "checkin" = promptAndCheckIn >> main
+  | command == "in" = printAvailable >> main
+  | command == "out" = printCheckedout >> main
+  | command == "quit" = print "bye!"
+  | otherwise = print "Sorry, comman not found"
+
 main :: IO ()
-main = print "db-lesson"
+main = do
+  print "Enter a command"
+  command <- getLine
+  performCommand command
