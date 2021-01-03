@@ -46,7 +46,10 @@ executable db-lesson-exe
   build-depends:
       base >=4.7 && <5
     , db-lesson
+    , time
+    , sqlite-simple
   default-language: Haskell2010
+  extensions: OverloadedStrings
 
 test-suite db-lesson-test
   type: exitcode-stdio-1.0
