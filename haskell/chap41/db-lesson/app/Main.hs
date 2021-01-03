@@ -26,5 +26,20 @@ instance Show Tool where
                       , "\n times borrowed: "
                       , show $ timesBorrowed tool
                       , "\n"]
+addUser :: String -> IO ()
+addUser userName = withConn "tools.db" $ \conn -> do
+  execute conn "INSERT INTO users (username) VALUES (?)" (Only userName)
+  print "user added"
+
+withConn :: String -> (Connection -> IO()) -> IO()
+withConn dbName action = do
+  conn <- open dbName
+  action conn
+  close conn
+
+checkout :: Int -> Int -> IO()
+checkout userId toolId = withConn "tools.db" $ \conn -> do
+  execute conn "INSERT INTO checkedout (user_id,tool_id) VALUES (?,?)" (userId,toolId)
+
 main :: IO ()
 main = print "db-lesson"
