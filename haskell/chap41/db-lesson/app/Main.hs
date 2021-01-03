@@ -41,5 +41,16 @@ checkout :: Int -> Int -> IO()
 checkout userId toolId = withConn "tools.db" $ \conn -> do
   execute conn "INSERT INTO checkedout (user_id,tool_id) VALUES (?,?)" (userId,toolId)
 
+-- SQLのレコードをHaskellのデータ型に変換する
+instance FromRow User where
+  fromRow = User <$> field <*> field
+instance FromRow Tool where
+  fromRow = Tool <$> field <*> field <*> field <*> field <*> field
+
+printUsers :: IO()
+printUsers = withConn "tools.db" $ \conn -> do
+  resp <- query_ conn "SELECT * FROM users;" :: IO [User]
+  mapM_ print resp
+
 main :: IO ()
 main = print "db-lesson"
