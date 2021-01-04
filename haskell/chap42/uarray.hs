@@ -35,6 +35,16 @@ listToSTUArray vals = do
   let end = length vals -1
   myArray <- newArray (0,end) 0
   forM_ [0 .. end] $ \i -> do
-    let val = vals !! 1
+    let val = vals !! i
+    writeArray myArray i val
+  return myArray
+
+-- STUArrayのコンテキストからUArrayを取り出す
+listToUArray :: [Int] -> UArray Int Int
+listToUArray vals = runSTUArray $ do
+  let end = length vals -1
+  myArray <- newArray (0,end) 0
+  forM_ [0 .. end] $ \i -> do
+    let val = vals !! i
     writeArray myArray i val
   return myArray
