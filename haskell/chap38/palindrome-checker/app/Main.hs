@@ -73,7 +73,7 @@ isPrime n
 displayResult :: Either PrimeError Bool -> String
 displayResult (Right True) = "It's prime"
 displayResult (Right False) = "It's composite"
-displayResult (Left primeerror) = show primeerror  
+displayResult (Left primeerror) = show primeerror
 
 main :: IO ()
 main = do
