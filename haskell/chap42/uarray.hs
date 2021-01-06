@@ -32,7 +32,7 @@ threeTimesBiB = accum (*) updateBiB $ zip [0 .. 3] $ cycle [3]
 -- Int型のリストをSTUArrayに変更する
 listToSTUArray :: [Int] -> ST s (STUArray s Int Int)
 listToSTUArray vals = do
-  let end = length vals -1
+  let end = length vals - 1
   myArray <- newArray (0,end) 0
   forM_ [0 .. end] $ \i -> do
     let val = vals !! i
