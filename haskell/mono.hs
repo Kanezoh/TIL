@@ -1,5 +1,6 @@
 import Data.List
 import Data.Semigroup
+import Data.Monoid
 
 -- 関数合成
 
@@ -25,4 +26,17 @@ instance Semigroup Integer where
 
 -- mconcat 複数のMonoidを一度に組み合わせる
 -- memptyとmappendを定義すると挙動を推測してくれる。
-mconcat ["does", "this", "make", "sense?"] -- => "does this make sense?"
+-- mconcat ["does", "this", "make", "sense?"] -- => "does this make sense?"
+
+-- パラメータ型
+data Box a = Box a deriving Show
+wrap :: a -> Box a
+wrap x = Box x
+
+unwrap :: Box a -> a
+unwrap (Box x) = x
+
+-- カインド: 型の型
+-- :kind Int => Int :: *
+-- :kind Box => Box :: * -> *
+-- :kind Box Int => Box Int :: *
